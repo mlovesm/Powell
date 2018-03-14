@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary"
+    android:gravity="center"
+    android:layout_centerVertical="true"
+    >
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/intro_logo"
+        android:layout_marginTop="20dp"
+        android:scaleType="fitCenter" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:paddingLeft="@dimen/layoutBox_horizontal_padding"
+        android:paddingRight="@dimen/layoutBox_horizontal_padding"
+        android:paddingTop="@dimen/layoutBox_vertical_padding"
+        android:paddingBottom="@dimen/layoutBox_vertical_padding"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="@drawable/textbox_line"
+            android:layout_marginTop="@dimen/form_vertical_margin"
+            >
+            <ImageView
+                android:id="@id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/login_icon_03"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                />
+
+            <EditText
+                android:id="@+id/editText3"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="10dp"
+                android:background="@null"
+                android:backgroundTint="@color/transparency"
+                android:hint="ID"
+                android:inputType="text"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="@drawable/textbox_line"
+            android:layout_marginTop="@dimen/form_vertical_margin"
+            android:layout_marginBottom="@dimen/form_vertical_margin"
+            >
+            <ImageView
+                android:id="@id/imageView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/login_icon_05"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                />
+            <EditText
+                android:id="@+id/editText4"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="PASSWORD"
+                android:textColorHint="@color/white"
+                android:inputType="textPassword"
+                android:layout_marginBottom="10dp"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:background="@null"
+                android:backgroundTint="@color/transparency"
+                />
+        </LinearLayout>
+
+        <Button
+            android:id="@id/button1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/button_vertical_padding"
+            android:layout_marginTop="30dp"
+            android:text="로그인"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:background="@color/blue_dark"
+            />
+    </LinearLayout>
+</LinearLayout>

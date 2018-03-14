@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="5dp"
+    android:background="@color/white"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:background="@drawable/border_bottom_l"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1.32"
+                android:checkedButton="@+id/offer"
+                android:gravity="left"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radio1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:text="양호"
+                    android:textColor="@color/green_m"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/radio2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:checked="false"
+                    android:text="검토"
+                    android:textColor="@color/item_color"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/radio3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:text="즉시"
+                    android:textColor="@color/blue2"
+                    android:textStyle="bold" />
+
+                <RadioButton
+                    android:id="@+id/radio4"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:text="긴급"
+                    android:textColor="@color/red"
+                    android:textStyle="bold" />
+            </RadioGroup>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@drawable/border_bottom"
+        >
+        <EditText
+            android:id="@id/editText1"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="top"
+            android:background="@color/white"
+            android:padding="6dp"
+            android:hint="내용을 입력해주세요"
+            android:textColorHint="@color/font_333"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="6dp"
+            />
+    </RelativeLayout>
+
+
+</LinearLayout>

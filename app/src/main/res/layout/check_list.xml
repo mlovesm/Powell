@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 점검일 조회 -->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/search_top"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_top"
+        android:background="@color/white"
+       >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+            <!-- 조회버튼 -->
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#ff333333"
+                android:text="점검일"
+                android:id="@+id/textView15"
+                android:paddingLeft="13dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/blue2"
+                android:id="@+id/textButton1"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:text="2017.04.01"
+                android:background="@drawable/box_blueline"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/textView16" />
+
+            <TextView
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/blue2"
+                android:gravity="center"
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="~"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/textButton2"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp" />
+
+            <TextView
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/blue2"
+                android:gravity="center"
+                android:id="@+id/textButton2"
+                android:layout_width="100dp"
+                android:layout_height="35dp"
+                android:text="2017.04.12"
+                android:background="@drawable/box_blueline"
+                android:layout_alignTop="@+id/textButton1"
+                android:layout_toStartOf="@+id/linearLayout" />
+
+            <LinearLayout
+                android:background="@drawable/box_basic"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:id="@+id/linearLayout">
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="28.0dip"
+                    android:layout_height="28.0dip"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/ic_top_search"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!-- 라인 -->
+        <LinearLayout
+            android:background="@color/gary"
+            android:layout_width="match_parent"
+            android:layout_height="1.0dip" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/search_top"
+        android:divider="@color/white"
+        android:background="@drawable/border_top"
+        />
+    <include
+        android:id="@id/layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/inc_top"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+</RelativeLayout>

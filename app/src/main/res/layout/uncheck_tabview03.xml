@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <!--상단 탭위치-->
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:orientation="vertical"
+           android:layout_below="@+id/layout_top"
+           android:layout_alignParentStart="true"
+           android:weightSum="1">
+
+    <!-- 추가정보 -->
+        <LinearLayout
+        android:id="@id/linearLayout1"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <!-- title -->
+            <!-- 라인 -->
+
+            <!-- 추가정보등록-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <!-- 좌표 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/border_top_bottom"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="6dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textColor="@color/font_333"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="TM 좌표"
+                        android:textColor="@color/font_333"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="위도/경도"
+                        android:textColor="@color/font_333"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/border_bottom_l"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="X축"
+                        android:textColor="@color/font_333"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/font_333"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:id="@+id/textView1" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/blue2"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:id="@+id/textView2" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Y축"
+                        android:textColor="@color/font_333"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/font_333"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:id="@+id/textView3" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/blue2"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:id="@+id/textView4" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- //추가정보-->
+
+    </LinearLayout>
+
+    <!--지도-->
+    <RelativeLayout
+       android:id="@+id/map_view"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent" />
+
+       </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:layout_alignParentBottom="true" >
+
+        <LinearLayout
+            android:background="@color/blue"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1.0" >
+
+            <TextView
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:id="@+id/textButton1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="현재 위치 찾기" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

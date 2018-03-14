@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical"
+           android:layout_alignParentStart="true"
+        android:weightSum="1">
+
+    <!-- 추가정보 -->
+        <LinearLayout
+            android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <!-- title -->
+            <!-- 라인 -->
+
+            <!-- 추가정보등록-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <!-- 좌표 -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/border_bottom_l"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/font_333"
+                        android:textSize="16sp"
+                        android:paddingLeft="5dp"
+                        android:id="@+id/textView1"
+                        android:textStyle="bold" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/font_333"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:id="@+id/textView2" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/font_333"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:id="@+id/textView3" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/font_333"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:id="@+id/textView4" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/font_333"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:paddingLeft="10dp"
+                        android:id="@+id/textView5" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- //추가정보-->
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:background="@color/colorPrimaryDark"
+                android:layout_width="0.0dip"
+                android:layout_height="50.0dip"
+                android:layout_weight="1.0"
+                android:id="@+id/linear1" >
+
+                <TextView
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/font_navtitle"
+                    android:gravity="center"
+                    android:id="@+id/textButton1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="저장" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="@color/gary_dark"
+                android:layout_width="0dip"
+                android:layout_height="50.0dip"
+                android:layout_weight="1.0"
+                android:id="@+id/linear2" >
+
+                <TextView
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/font_navtitle"
+                    android:gravity="center"
+                    android:id="@+id/textButton2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="닫기" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--지도-->
+    <!--<RelativeLayout-->
+       <!--android:id="@+id/draw_map_view"-->
+       <!--android:layout_width="match_parent"-->
+       <!--android:layout_height="match_parent" />-->
+
+       </LinearLayout>
+
+</RelativeLayout>

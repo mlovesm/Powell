@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/nav_menu1" android:icon="@drawable/ic_menu_setting" android:title="장치관리" />
+
+        <item android:id="@+id/nav_menu2" android:icon="@drawable/ic_menu_map" android:title="도면관리" />
+
+        <item android:id="@+id/nav_menu3" android:icon="@drawable/ic_menu_hub" android:title="MSDS관리" />
+
+        <item android:id="@+id/nav_menu4" android:icon="@drawable/ic_menu_insert" android:title="점검관리" />
+
+        <item android:id="@+id/nav_menu5" android:icon="@drawable/ic_menu_scan" android:title="NFC TAG" />
+
+        <item android:id="@+id/nav_menu6" android:icon="@drawable/ic_menu_default" android:title="점검승인" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item android:id="@+id/nav_log_out" android:icon="@drawable/ic_menu_check"
+                android:title="로그아웃" />
+        </menu>
+    </item>
+
+</menu>

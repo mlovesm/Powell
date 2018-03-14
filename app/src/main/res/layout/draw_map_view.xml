@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <include
+        android:id="@id/layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/inc_top"
+        android:layout_alignParentTop="true"/>
+    <!--상단 탭위치-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/layout_top"
+        android:layout_alignParentStart="true">
+
+        <!-- 추가정보 -->
+        <LinearLayout
+            android:id="@id/linearLayout1"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <!-- title -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal"
+                android:background="@color/title_bg"
+                >
+                <ImageView
+                    android:id="@id/imageView1"
+                    android:layout_width="28.0dip"
+                    android:layout_height="28.0dip"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_map_black_24dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:layout_toRightOf="@id/imageView1"
+                    android:layout_centerVertical="true"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:text="도면정보"
+                    />
+            </RelativeLayout>
+            <!-- 라인 -->
+            <LinearLayout
+                android:background="@color/gary_line"
+                android:layout_width="match_parent"
+                android:layout_height="1.0dip"/>
+
+            <!-- 추가정보등록-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_bottom"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <!-- 좌표 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/border_bottom_l"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/font_333"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:text="도면코드"
+                        android:paddingLeft="10dp" />
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/blue2"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/font_333"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:text="도면명"
+                        android:paddingLeft="10dp" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:textColor="@color/blue2"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout><!-- //도면정보-->
+
+        </LinearLayout>
+
+        <!--지도-->
+        <com.google.android.gms.maps.MapView
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map_view"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".fragment.FragMenuActivity" />
+
+    </LinearLayout>
+</RelativeLayout>

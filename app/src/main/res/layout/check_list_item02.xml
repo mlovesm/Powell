@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="76dp"
+    android:orientation="vertical"
+    android:layout_marginBottom="5dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="38dp"
+            android:background="@drawable/border_bottom_item">
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:singleLine="false"
+                android:text="2017-03-22"
+                android:textColor="@color/font_333"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
+                android:layout_toRightOf="@+id/textView1"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:maxWidth="150dp"
+                android:singleLine="true"
+                android:text="제2사업장"
+                android:textColor="@color/font_333"
+                android:textSize="15sp" />
+
+            <!-- 버튼 -->
+            <!-- 버튼 -->
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:background="@drawable/box_yellow"
+                android:layout_toLeftOf="@+id/text1"
+                android:layout_centerVertical="true"
+                android:text="검토"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:id="@+id/text11"
+                />
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1.0"
+                android:background="@drawable/box_line_green"
+                android:text="승인"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/green_m"
+                android:gravity="center"
+                android:id="@+id/text1"
+                />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="@drawable/border_bottom">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="10dp"
+                android:ellipsize="end"
+                android:gravity="center|left"
+                android:maxLines="1"
+                android:maxWidth="220dp"
+                android:text="시설"
+                android:textColor="@color/font_333"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/textView4"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="점검자"
+                android:textColor="@color/font_333"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <!-- 버튼 -->
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1.0"
+                android:background="@drawable/box_blue"
+                android:text="2차"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:id="@+id/text2"
+                />
+        </RelativeLayout>
+
+    </LinearLayout>
+</LinearLayout>
