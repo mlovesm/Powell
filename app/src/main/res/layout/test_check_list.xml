@@ -116,9 +116,10 @@
         android:layout_below="@id/search_top">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/listView1"
+            android:id="@+id/recyclerView1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layoutAnimation="@anim/layout_animation_from_right"
             />
 
     </android.support.v4.widget.SwipeRefreshLayout>

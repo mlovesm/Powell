@@ -61,7 +61,6 @@ public class WorkStandardMainFragment extends Fragment {
     private ArrayList<HashMap<String,Object>> boardArray;
     private WorkAdapter mAdapter;
     @Bind(R.id.listView1) ListView listView;
-    @Bind(R.id.top_title) TextView textTitle;
 
     @Bind(R.id.search_top) LinearLayout layout;
     @Bind(R.id.search_spi) Spinner search_spi;
@@ -77,10 +76,8 @@ public class WorkStandardMainFragment extends Fragment {
         aq= new AQuery(getActivity());
         service= RetrofitService.rest_api.create(RetrofitService.class);
 
-        view.findViewById(R.id.top_search).setVisibility(View.VISIBLE);
         layout.setVisibility(View.GONE);
 
-        textTitle.setText(getArguments().getString("title"));
         manual_kind = getArguments().getString("code");
 
         async_progress_dialog("getBoardInfo");
@@ -149,21 +146,6 @@ public class WorkStandardMainFragment extends Fragment {
         }
         mAdapter = new WorkAdapter(getActivity(), boardArray);
         listView.setAdapter(mAdapter);
-    }
-
-    @OnClick(R.id.top_search)
-    public void getSearch() {
-        if(layout.getVisibility()==View.GONE){
-            layout.setVisibility(View.VISIBLE);
-            layout.setFocusable(true);
-        }else{
-            layout.setVisibility(View.GONE);
-        }
-    }
-
-    @OnClick(R.id.top_home)
-    public void goHome() {
-        UtilClass.goHome(getActivity());
     }
 
     //해당 검색값 데이터 조회

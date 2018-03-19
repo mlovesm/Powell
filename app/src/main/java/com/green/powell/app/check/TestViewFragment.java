@@ -438,9 +438,4 @@ public class TestViewFragment extends Fragment implements OnMapReadyCallback,
         Toast.makeText(getActivity(), "Click Info Window="+marker.getSnippet()+", "+marker.getZIndex(), Toast.LENGTH_SHORT).show();
     }
 
-
-//    @OnClick(R.id.top_home)
-//    public void goHome() {
-//        UtilClass.goHome(getActivity());
-//    }
 }

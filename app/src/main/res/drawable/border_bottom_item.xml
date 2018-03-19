@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <!-- border 색상 -->
-            <solid android:color="@color/gary_light" />
+            <solid android:color="@color/gary_line" />
         </shape>
     </item>
     <item android:bottom="1dp">

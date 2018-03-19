@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.green.powell.app.BuildConfig;
 import com.green.powell.app.R;
@@ -58,8 +59,19 @@ public class UtilClass {
     }
 
     //데이터 Null 체크
-    public static void responseDataNullCheck(ArrayList<HashMap<String, Object>> list, int num) {
+    public static void responseDataNullCheck(ArrayList<HashMap<String, String>> list, int num) {
         for (Iterator iter = list.get(num).entrySet().iterator(); iter.hasNext();) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            String key = (String)entry.getKey();
+
+            if(entry.getValue()==null){
+                entry.setValue("");
+            }
+        }
+    }
+
+    public static void dataNullCheckZero(HashMap<String, String> hashMap) {
+        for (Iterator iter = hashMap.entrySet().iterator(); iter.hasNext();) {
             Map.Entry entry = (Map.Entry) iter.next();
             String key = (String)entry.getKey();
 
@@ -134,6 +146,33 @@ public class UtilClass {
             return "0";
         }
 
+    }
+
+    //날짜 시간 현재 시간에서 선택
+    public static ArrayList<Integer> dateAndTimeChoiceList(TextView view, String gubun) {
+        ArrayList<Integer> list = new ArrayList();
+        if(view.length()>0){
+            String date= view.getText().toString();
+            if(gubun.equals("D")){
+                int firstPoint= date.indexOf(".");
+                int lastPoint= date.lastIndexOf(".");
+                int year= Integer.parseInt(date.substring(0,firstPoint));
+                int month= Integer.parseInt(date.substring(firstPoint+1, lastPoint));
+                int day= Integer.parseInt(date.substring(lastPoint+1));
+                list.add(year);
+                list.add(month);
+                list.add(day);
+            }else{
+                int point= date.indexOf(":");
+                int hour= Integer.parseInt(date.substring(0,point));
+                int minute= Integer.parseInt(date.substring(point+1));
+                list.add(hour);
+                list.add(minute);
+            }
+        }else{
+
+        }
+        return list;
     }
 
     public static String jsonDateConverter(String jsonDate){

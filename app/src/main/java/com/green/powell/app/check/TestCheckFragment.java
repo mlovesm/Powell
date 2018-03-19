@@ -3,9 +3,11 @@ package com.green.powell.app.check;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.NfcF;
 import android.os.Bundle;
@@ -15,11 +17,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,8 +44,6 @@ import com.green.powell.app.retrofit.RetrofitService;
 import com.green.powell.app.util.UtilClass;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -53,7 +54,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TestCheckFragment extends Fragment implements InfoListAdapter.CardViewClickListener ,SwipeRefreshLayout.OnRefreshListener{
-    private static final String TAG = "TestCheckFragment";
+    private final String TAG = this.getClass().getSimpleName();
     private ProgressDialog pDlalog = null;
     private String title;
 
@@ -61,7 +62,7 @@ public class TestCheckFragment extends Fragment implements InfoListAdapter.CardV
     private InfoListAdapter mAdapter;
 
     @Bind(R.id.swipeRefreshLo) SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind(R.id.listView1) RecyclerView mRecyclerView;
+    @Bind(R.id.recyclerView1) RecyclerView mRecyclerView;
 
     @Bind(R.id.search_top) LinearLayout layout;
     @Bind(R.id.textButton1) TextView tv_button1;
@@ -78,7 +79,8 @@ public class TestCheckFragment extends Fragment implements InfoListAdapter.CardV
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UtilClass.logD(TAG, "들어옴 onCreate");
+
+        title= getArguments().getString("title");
         setHasOptionsMenu(true);
     }
 
@@ -87,14 +89,11 @@ public class TestCheckFragment extends Fragment implements InfoListAdapter.CardV
         View view = inflater.inflate(R.layout.test_check_list, container, false);
         ButterKnife.bind(this, view);
 
-        title= getArguments().getString("title");
-        view.findViewById(R.id.top_write).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.top_search).setVisibility(View.VISIBLE);
-
         tv_button1.setText(UtilClass.getCurrentDate(2));
         tv_button2.setText(UtilClass.getCurrentDate(1));
 
         setRecyclerView();
+
         mSwipeRefreshLayout.setOnRefreshListener(this);
         //색상지정
         mSwipeRefreshLayout.setColorSchemeResources(R.color.yellow, R.color.red, R.color.black, R.color.blue);
@@ -130,11 +129,46 @@ public class TestCheckFragment extends Fragment implements InfoListAdapter.CardV
         return view;
     }//onCreateView
 
+    public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+        private int offset;
+
+        public ItemOffsetDecoration(int offset) {
+            this.offset = offset;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view,
+                                   RecyclerView parent, RecyclerView.State state) {
+
+            // Add padding only to the zeroth item
+            if (parent.getChildAdapterPosition(view) == 0) {
+
+                outRect.right = offset;
+                outRect.left = offset;
+                outRect.top = offset;
+                outRect.bottom = offset;
+            }
+        }
+    }
+
     private void setRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setHasFixedSize(true);
+//        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+//        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(layoutManager);
 
+    }
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        int resId = R.anim.layout_animation_from_right;
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, resId);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
     @Override
@@ -189,7 +223,7 @@ public class TestCheckFragment extends Fragment implements InfoListAdapter.CardV
         pDlalog = new ProgressDialog(getActivity());
         UtilClass.showProcessingDialog(pDlalog);
 
-        Call<Datas> call = service.listData("Check","checkMInfoList", tv_button1.getText().toString(), tv_button2.getText().toString(), MainActivity.use_part1);
+        Call<Datas> call = service.listData("Check","checkMInfoList", tv_button1.getText().toString(), tv_button2.getText().toString(), "");
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -205,7 +239,7 @@ public class TestCheckFragment extends Fragment implements InfoListAdapter.CardV
                         arrayList.clear();
                         for(int i=0; i<response.body().getList().size();i++){
                             HashMap<String,Object> hashMap = new HashMap<>();
-                            hashMap.put("key",Double.valueOf((double) response.body().getList().get(i).get("CHK_NO")).intValue());
+                            hashMap.put("key",String.valueOf(Double.valueOf(response.body().getList().get(i).get("CHK_NO")).intValue()));
                             hashMap.put("data1",response.body().getList().get(i).get("CHECK_DATE").toString());
                             hashMap.put("data2",response.body().getList().get(i).get("PART1_NM").toString());
                             hashMap.put("data3",response.body().getList().get(i).get("PART2_NM").toString());
@@ -216,6 +250,8 @@ public class TestCheckFragment extends Fragment implements InfoListAdapter.CardV
                         }
                         mAdapter = new InfoListAdapter(getActivity(),R.layout.test_check_list_item, arrayList, "", TestCheckFragment.this);
                         mRecyclerView.setAdapter(mAdapter);
+
+                        runLayoutAnimation(mRecyclerView);
 
                     } catch ( Exception e ) {
                         e.printStackTrace();
@@ -251,20 +287,15 @@ public class TestCheckFragment extends Fragment implements InfoListAdapter.CardV
     }
 
     public void getDialog(String gubun) {
-        int year, month, day, hour, minute;
-
-        GregorianCalendar calendar = new GregorianCalendar();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day= calendar.get(Calendar.DAY_OF_MONTH);
-        hour = calendar.get(Calendar.HOUR_OF_DAY);
-        minute = calendar.get(Calendar.MINUTE);
-
         if(gubun.equals("SD")){
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, year, month, 1);
+            TextView textView= tv_button1;
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, UtilClass.dateAndTimeChoiceList(textView, "D").get(0)
+                    , UtilClass.dateAndTimeChoiceList(textView, "D").get(1)-1, UtilClass.dateAndTimeChoiceList(textView, "D").get(2));
             dialog.show();
         }else{
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, year, month, day);
+            TextView textView= tv_button2;
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, UtilClass.dateAndTimeChoiceList(textView, "D").get(0)
+                    , UtilClass.dateAndTimeChoiceList(textView, "D").get(1)-1, UtilClass.dateAndTimeChoiceList(textView, "D").get(2));
             dialog.show();
         }
 

@@ -4,6 +4,7 @@
     <include
         android:id="@id/layout_top"
         android:layout_width="fill_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         layout="@layout/inc_top"
         android:layout_alignParentTop="true"/>

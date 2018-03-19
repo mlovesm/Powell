@@ -186,12 +186,6 @@ public class AnyExpandableAdapter extends AnimatedExpandableListView.AnimatedExp
                     case R.id.radio2:
                         headerItems.setState("2");
                         break;
-                    case R.id.radio3:
-                        headerItems.setState("3");
-                        break;
-                    case R.id.radio4:
-                        headerItems.setState("4");
-                        break;
                     default:
                         break;
                 }
@@ -204,10 +198,8 @@ public class AnyExpandableAdapter extends AnimatedExpandableListView.AnimatedExp
             childHolder.state.check(R.id.radio1);
         }else if(headerItems.getState().equals("2")){
             childHolder.state.check(R.id.radio2);
-        }else if(headerItems.getState().equals("3")){
-            childHolder.state.check(R.id.radio3);
         }else{
-            childHolder.state.check(R.id.radio4);
+            childHolder.state.check(R.id.radio2);
         }
 
         return v;

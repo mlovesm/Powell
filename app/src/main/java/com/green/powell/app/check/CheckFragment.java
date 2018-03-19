@@ -48,7 +48,7 @@ public class CheckFragment extends Fragment {
     private static final String TAG = "CheckFragment";
     private ProgressDialog pDlalog = null;
 
-    private ArrayList<HashMap<String,Object>> arrayList;
+    private ArrayList<HashMap<String,String>> arrayList;
     private CheckAdapter mAdapter;
     @Bind(R.id.listView1) ListView listView;
     @Bind(R.id.top_title) TextView textTitle;
@@ -147,7 +147,7 @@ public class CheckFragment extends Fragment {
         pDlalog = new ProgressDialog(getActivity());
         UtilClass.showProcessingDialog(pDlalog);
 
-        Call<Datas> call = service.listData("Check","checkMInfoList", tv_button1.getText().toString(), tv_button2.getText().toString(), MainActivity.use_part1);
+        Call<Datas> call = service.listData("Check","checkMInfoList", tv_button1.getText().toString(), tv_button2.getText().toString(), "");
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -162,8 +162,8 @@ public class CheckFragment extends Fragment {
                         arrayList = new ArrayList<>();
                         arrayList.clear();
                         for(int i=0; i<response.body().getList().size();i++){
-                            HashMap<String,Object> hashMap = new HashMap<>();
-                            hashMap.put("key",Double.valueOf((double) response.body().getList().get(i).get("CHK_NO")).intValue());
+                            HashMap<String,String> hashMap = new HashMap<>();
+                            hashMap.put("key",String.valueOf(Double.valueOf(response.body().getList().get(i).get("CHK_NO")).intValue()));
                             hashMap.put("data1",response.body().getList().get(i).get("CHECK_DATE").toString());
                             hashMap.put("data2",response.body().getList().get(i).get("PART1_NM").toString());
                             hashMap.put("data3",response.body().getList().get(i).get("PART2_NM").toString());

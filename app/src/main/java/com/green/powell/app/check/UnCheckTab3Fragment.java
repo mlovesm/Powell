@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.green.powell.app.R;
-import com.green.powell.app.equipment.GPSLocationActivity;
 import com.green.powell.app.retrofit.Datas;
 import com.green.powell.app.retrofit.RetrofitService;
 import com.green.powell.app.util.UtilClass;
@@ -98,7 +97,7 @@ public class UnCheckTab3Fragment extends Fragment {
             @Override
             public void onPermissionGranted() {
                 if(checkGpsService()){
-                    Intent intent = new Intent(getActivity(),GPSLocationActivity.class);
+                    Intent intent = new Intent();
                     intent.putExtra("title", "현재위치찾기");
                     intent.putExtra("equip_no", equip_no);
                     startActivity(intent);
@@ -157,8 +156,6 @@ public class UnCheckTab3Fragment extends Fragment {
 
                         equip_no= response.body().getList().get(0).get("EQUIP_NO").toString();
                         equip_nm= response.body().getList().get(0).get("EQUIP_NM").toString();
-                        latitd= (double) response.body().getList().get(0).get("LATITD");
-                        longtd= (double) response.body().getList().get(0).get("LONGTD");
 
                     } catch ( Exception e ) {
                         e.printStackTrace();

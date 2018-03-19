@@ -38,7 +38,6 @@ public class WorkStandardFragment extends Fragment {
     private ArrayList<HashMap<String, Object>> workMenuArray;
     private WorkAdapter mAdapter;
     @Bind(R.id.listView1) ListView listView;
-    @Bind(R.id.top_title) TextView textTitle;
 
     private AQuery aq = new AQuery(getActivity());
 
@@ -52,7 +51,6 @@ public class WorkStandardFragment extends Fragment {
         View view = inflater.inflate(R.layout.menu_work, container, false);
         ButterKnife.bind(this, view);
 
-        textTitle.setText(getArguments().getString("title"));
         view.findViewById(R.id.top_home).setVisibility(View.VISIBLE);
         async_progress_dialog("getMenuInfo");
 
@@ -92,12 +90,6 @@ public class WorkStandardFragment extends Fragment {
             Toast.makeText(getActivity(), "데이터가 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }
-
-    @OnClick(R.id.top_home)
-    public void goHome() {
-        UtilClass.goHome(getActivity());
-    }
-
 
     public void onFragment(Fragment fragment, Bundle bundle,String title){
         FragmentManager fm = getFragmentManager();

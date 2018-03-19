@@ -19,17 +19,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EquipmentViewFragment extends Fragment {
-    private static final String TAG = "EquipmentViewFragment";
+    private final String TAG = this.getClass().getSimpleName();
 
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
     public static int int_items = 2 ;
 
-    @Bind(R.id.top_title) TextView textTitle;
-
     private String idx="";
-
-    private AQuery aq = new AQuery(getActivity());
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -70,7 +66,6 @@ public class EquipmentViewFragment extends Fragment {
             }
         });
 
-        textTitle.setText(getArguments().getString("title"));
         idx= getArguments().getString("equip_no");
 
         return view;
@@ -114,7 +109,7 @@ public class EquipmentViewFragment extends Fragment {
                 case 0 :
                     return "기본정보";
                 case 1 :
-                    return "위치정보";
+                    return "이력정보";
                 case 2 :
                     return "";
             }
@@ -122,9 +117,4 @@ public class EquipmentViewFragment extends Fragment {
         }
     }
 
-
-    @OnClick(R.id.top_home)
-    public void goHome() {
-        UtilClass.goHome(getActivity());
-    }
 }

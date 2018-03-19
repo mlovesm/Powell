@@ -48,10 +48,9 @@ public class CheckApprovalFragment extends BaseFragment implements CheckAdapter.
     private Animation slideDown;
     private boolean isDown = true;
 
-    private ArrayList<HashMap<String,Object>> arrayList;
+    private ArrayList<HashMap<String,String>> arrayList;
     private CheckAdapter mAdapter;
     @Bind(R.id.listView1) ListView listView;
-    @Bind(R.id.top_title) TextView textTitle;
 
     @Bind(R.id.search_top) LinearLayout layout;
     @Bind(R.id.textButton1) TextView tv_button1;
@@ -72,9 +71,6 @@ public class CheckApprovalFragment extends BaseFragment implements CheckAdapter.
         ButterKnife.bind(this, view);
         pref = new SettingPreference("loginData",getActivity());
         user_auth= pref.getValue("user_auth", 0);
-
-        textTitle.setText(getArguments().getString("title"));
-        view.findViewById(R.id.top_search).setVisibility(View.VISIBLE);
 
         tv_button1.setText(UtilClass.getCurrentDate(2));
         tv_button2.setText(UtilClass.getCurrentDate(1));
@@ -149,9 +145,9 @@ public class CheckApprovalFragment extends BaseFragment implements CheckAdapter.
                                     entry.setValue("");
                                 }
                             }
-                            HashMap<String,Object> hashMap = new HashMap<>();
+                            HashMap<String,String> hashMap = new HashMap<>();
                             hashMap.put("key",response.body().getList().get(i).get("KEY_NO").toString());
-                            hashMap.put("chk_no",Double.valueOf((double) response.body().getList().get(i).get("CHK_NO")).intValue());
+                            hashMap.put("chk_no", String.valueOf(Double.valueOf(response.body().getList().get(i).get("CHK_NO")).intValue()));
                             hashMap.put("data1",response.body().getList().get(i).get("CHECK_DATE").toString());
                             hashMap.put("data2",response.body().getList().get(i).get("CHILD_NM").toString());
                             hashMap.put("data3",response.body().getList().get(i).get("MAX_CHECK").toString());
@@ -252,11 +248,6 @@ public class CheckApprovalFragment extends BaseFragment implements CheckAdapter.
     public void onSearchColumn() {
         async_progress_dialog();
 
-    }
-
-    @OnClick(R.id.top_home)
-    public void goHome() {
-        UtilClass.goHome(getActivity());
     }
 
 

@@ -64,7 +64,7 @@
                 android:textColor="@color/white"
                 />
         </LinearLayout>
-        <LinearLayout android:background="@color/blue_dark" android:layout_width="0.0dip" android:layout_height="50.0dip" android:layout_weight="1.0">
+        <LinearLayout android:background="@color/colorPrimaryDark" android:layout_width="0.0dip" android:layout_height="50.0dip" android:layout_weight="1.0">
             <TextView
                 android:id="@+id/textButton2"
                 android:layout_width="match_parent"

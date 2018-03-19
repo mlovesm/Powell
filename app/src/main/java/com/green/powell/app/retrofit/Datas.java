@@ -9,15 +9,15 @@ import java.util.HashMap;
 public class Datas {
     @SerializedName("datas")
 	@Expose
-	ArrayList<HashMap<String,Object>> datas;
+	ArrayList<HashMap<String,String>> datas;
 	int count;
 	String status;
 
-	public ArrayList<HashMap<String, Object>> getList() {
+	public ArrayList<HashMap<String, String>> getList() {
 		return datas;
 	}
 
-	public void setList(ArrayList<HashMap<String, Object>> datas) {
+	public void setList(ArrayList<HashMap<String, String>> datas) {
 		this.datas = datas;
 	}
 

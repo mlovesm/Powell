@@ -30,12 +30,10 @@ import com.green.powell.app.check.CheckWriteFragment;
 import com.green.powell.app.check.TestCheckFragment;
 import com.green.powell.app.check.TestViewFragment;
 import com.green.powell.app.check.UnCheckFragment;
-import com.green.powell.app.draw.DrawFragment;
 import com.green.powell.app.equipment.EquipmentFragment;
 import com.green.powell.app.equipment.EquipmentViewFragment;
 import com.green.powell.app.menu.LoginActivity;
 import com.green.powell.app.menu.SettingActivity;
-import com.green.powell.app.msds.MsdsFragment;
 import com.green.powell.app.nfc.set.NdefMessageParser;
 import com.green.powell.app.nfc.set.ParsedRecord;
 import com.green.powell.app.nfc.set.TextRecord;
@@ -64,8 +62,6 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
     private String tagValue;
 
     private String equip_no;
-    private int user_auth;
-    private String use_part1;
 
     private DrawerLayout drawer;
     private FragmentManager fm;
@@ -80,8 +76,6 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
         setContentView(R.layout.activity_fragment);
         backPressCloseSystem = new BackPressCloseSystem(this);
         service = RetrofitService.rest_api.create(RetrofitService.class);
-        user_auth= pref.getValue("user_auth", 0);
-        use_part1= pref.getValue("use_part1", "");
 
         title= getIntent().getStringExtra("title");
         if(title==null) title= "";
@@ -90,7 +84,7 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        async_progress_dialog();
+//        async_progress_dialog();
         onMenuInfo(title);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -222,14 +216,8 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new EquipmentViewFragment());
             bundle.putString("equip_no", equip_no);
 
-        }else if(title.equals("도면관리")){
-            fragmentTransaction.replace(R.id.fragmentReplace, frag = new DrawFragment());
-
         }else if(title.equals("테스트")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new TestViewFragment());
-
-        }else if(title.equals("MSDS관리")){
-            fragmentTransaction.replace(R.id.fragmentReplace, frag = new MsdsFragment());
 
         }else if(title.equals("점검관리")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new TestCheckFragment());
@@ -281,7 +269,7 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
     public void async_progress_dialog(){
         RetrofitService service = RetrofitService.rest_api.create(RetrofitService.class);
 
-        Call<Datas> call = service.listData("Check","unCheckList", use_part1);
+        Call<Datas> call = service.listData("Check","unCheckList", "0001");
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -441,29 +429,17 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
             intent.putExtra("title", "MSDS관리");
 
         } else if (id == R.id.nav_menu4) {
-            if(user_auth==0){
-                Toast.makeText(getApplicationContext(), "해당 권한이 없습니다.", Toast.LENGTH_SHORT).show();
-                return false;
-            }else {
                 intent = new Intent(getApplicationContext(), FragMenuActivity.class);
                 intent.putExtra("title", "점검관리");
-            }
+
         } else if (id == R.id.nav_menu5) {
-            if(user_auth==0){
-                Toast.makeText(getApplicationContext(), "해당 권한이 없습니다.", Toast.LENGTH_SHORT).show();
-                return false;
-            }else {
                 intent = new Intent(getApplicationContext(), NFCMenuActivity.class);
                 intent.putExtra("title", "NFC관리");
-            }
+
         } else if (id == R.id.nav_menu6) {
-            if(user_auth==0){
-                Toast.makeText(getApplicationContext(), "해당 권한이 없습니다.", Toast.LENGTH_SHORT).show();
-                return false;
-            }else {
                 intent = new Intent(getApplicationContext(), FragMenuActivity.class);
                 intent.putExtra("title", "점검승인");
-            }
+
         } else if (id == R.id.nav_log_out) {
             alertDialog("L");
             return false;

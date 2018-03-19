@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/yellow2_main"
+    android:background="@drawable/main_bg"
     android:gravity="center_vertical|center_horizontal"
     android:weightSum="1"
     >
@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_weight="0.1"
-        android:background="@drawable/main_bg_top"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingBottom="10dp"

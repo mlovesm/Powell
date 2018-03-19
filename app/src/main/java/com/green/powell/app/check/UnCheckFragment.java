@@ -39,7 +39,7 @@ public class UnCheckFragment extends Fragment{
     private static final String TAG = "UnCheckFragment";
     private ProgressDialog pDlalog = null;
 
-    private ArrayList<HashMap<String,Object>> arrayList;
+    private ArrayList<HashMap<String,String>> arrayList;
     private CheckAdapter mAdapter;
     @Bind(R.id.listView1) ListView listView;
     @Bind(R.id.top_title) TextView textTitle;
@@ -103,13 +103,13 @@ public class UnCheckFragment extends Fragment{
                         arrayList = new ArrayList<>();
                         arrayList.clear();
                         for(int i=0; i<response.body().getList().size();i++){
-                            HashMap<String,Object> hashMap = new HashMap<>();
+                            HashMap<String,String> hashMap = new HashMap<>();
 //                            hashMap.put("key",Double.valueOf((double) response.body().getList().get(i).get("CHK_NO")).intValue());
                             hashMap.put("key",response.body().getList().get(i).get("EQUIP_NO").toString());
                             hashMap.put("data1",response.body().getList().get(i).get("EQUIP_NO").toString());
                             hashMap.put("data2",response.body().getList().get(i).get("EQUIP_NM").toString());
-                            hashMap.put("data3",Double.valueOf((double) response.body().getList().get(i).get("CHECK_CNT")).intValue());
-                            hashMap.put("data4",Double.valueOf((double) response.body().getList().get(i).get("OVER_CNT")).intValue());
+                            hashMap.put("data3",String.valueOf(Double.valueOf(response.body().getList().get(i).get("CHECK_CNT")).intValue()));
+                            hashMap.put("data4",String.valueOf(Double.valueOf(response.body().getList().get(i).get("OVER_CNT")).intValue()));
                             hashMap.put("data5",response.body().getList().get(i).get("TYPE_KOR").toString());
                             arrayList.add(hashMap);
                         }

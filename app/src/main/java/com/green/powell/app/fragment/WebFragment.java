@@ -34,7 +34,6 @@ public class WebFragment extends Fragment {
     private String url;
     private String title;
 
-    @Bind(R.id.top_title) TextView textTitle;
     @Bind(R.id.webView1) WebView webView;
     private ProgressDialog dialog;
 
@@ -49,8 +48,6 @@ public class WebFragment extends Fragment {
 
         url= getArguments().getString("url");
         title= getArguments().getString("title");
-        textTitle.setText(title);
-        view.findViewById(R.id.top_home).setVisibility(View.VISIBLE);
 
         final Context myApp = getActivity();
         //자바스크립트 Alert,confirm 사용
@@ -145,11 +142,6 @@ public class WebFragment extends Fragment {
                 }
             });
         }
-    }
-
-    @OnClick(R.id.top_home)
-    public void goHome() {
-        UtilClass.goHome(getActivity());
     }
 
     private class MyWebViewClient extends WebViewClient {

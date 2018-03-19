@@ -16,9 +16,9 @@ import java.util.HashMap;
 
 public class CheckAdapter extends BaseAdapter  implements View.OnClickListener{
 
-	private static final String TAG = "CheckAdapter";
+	private final String TAG = this.getClass().getSimpleName();
 	private LayoutInflater inflater;
-	private ArrayList<HashMap<String,Object>> boardList;
+	private ArrayList<HashMap<String,String>> boardList;
 	private ViewHolder viewHolder;
 	private Context con;
 	private String name;
@@ -30,14 +30,14 @@ public class CheckAdapter extends BaseAdapter  implements View.OnClickListener{
 
 	private ListBtnClickListener listBtnClickListener ;
 
-	public CheckAdapter(Context con , ArrayList<HashMap<String,Object>> array, String name){
+	public CheckAdapter(Context con , ArrayList<HashMap<String,String>> array, String name){
 		inflater = LayoutInflater.from(con);
 		boardList = array;
 		this.con = con;
 		this.name = name;
 	}
 
-	public CheckAdapter(Context con , ArrayList<HashMap<String,Object>> array, String name, ListBtnClickListener clickListener){
+	public CheckAdapter(Context con , ArrayList<HashMap<String,String>> array, String name, ListBtnClickListener clickListener){
 		inflater = LayoutInflater.from(con);
 		boardList = array;
 		this.con = con;
@@ -210,11 +210,11 @@ public class CheckAdapter extends BaseAdapter  implements View.OnClickListener{
 		}
 	}
 
-	public void setArrayList(ArrayList<HashMap<String,Object>> arrays){
+	public void setArrayList(ArrayList<HashMap<String,String>> arrays){
 		this.boardList = arrays;
 	}
 	
-	public ArrayList<HashMap<String,Object>> getArrayList(){
+	public ArrayList<HashMap<String,String>> getArrayList(){
 		return boardList;
 	}
 	

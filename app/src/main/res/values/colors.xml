@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#fe611e</color>
-    <color name="colorPrimaryDark">#ffea4915</color>
-    <color name="colorAccent">#ffdd5738</color>
+    <color name="colorPrimary">#ff7677ff</color>
+    <color name="colorPrimaryDark">#ff5555aa</color>
+    <color name="colorAccent">#ff50e3c2</color>
+    <color name="colorAccent2">#ff7c43ef</color>
+    <color name="maincolor_b">#ff2886fe</color>
+    <color name="maincolor_v">#ffa67bff</color>
     <color name="font_navtitle">#ffffffff</color>
     <color name="font_333">#ff333333</color>
     <color name="font_666">#ff666666</color>
     <color name="title_bg">#ffeeeeee</color>
-    <color name="gary_light">#ffe7eaf1</color>
+    <color name="item_color">#ffececec</color>
     <color name="gary">#ffcbcbcb</color>
+    <color name="gary_bg">#fffbfbfb</color>
+    <color name="gary_light">#ffe7eaf1</color>
     <color name="gary_dark">#ff8a8a8a</color>
     <color name="gary_dark2">#ff666666</color>
-    <color name="gary_bg">#fffbfbfb</color>
     <color name="gary_line">#ffb7b7b7</color>
     <color name="gary_line_light">#ffececec</color>
     <color name="gary_line_dark">#ffa1a1a1</color>
@@ -39,5 +43,4 @@
     <color name="yellow_main">#fffb8a00</color>
     <color name="yellow2_main">#fffea600</color>
     <color name="yellow_deep">#ffd99900</color>
-    <color name="item_color">#f4b51e</color>
-</resources>
+    </resources>

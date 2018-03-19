@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     app:ignore="NamespaceTypo">
 
-    <!-- 점검일 조회 -->
+    <!-- 정기점검조회 -->
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/search_top"
         android:gravity="center"
@@ -16,24 +16,41 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         >
-        <!-- 설비정보_리스트 -->
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:paddingLeft="20dp"
-            android:paddingRight="10dp" >
+            android:paddingRight="10dp">
 
-            <Spinner
-                android:id="@+id/spinner1"
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/linearLayout3"
-                android:gravity="center_vertical"
-                android:hint="설비명을 입력하세요."
-                android:textColor="@color/black"
-                android:textSize="15sp" />
             <!-- 조회버튼 -->
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#ff333333"
+                android:text="점검일"
+                android:layout_alignParentStart="true"
+                android:layout_marginRight="10dp"
+                />
+            <TextView
+                android:id="@+id/textButton1"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@drawable/box_blueline"
+                android:text="2017.04.01"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/blue2"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/textView15"
+                android:layout_toStartOf="@+id/linearLayout"
+                />
+
             <LinearLayout
                 android:background="@drawable/box_basic"
                 android:layout_width="38dp"
@@ -41,7 +58,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:id="@+id/linearLayout3">
+                android:id="@+id/linearLayout">
+
                 <ImageView
                     android:id="@+id/imageView1"
                     android:layout_width="28.0dip"
@@ -52,54 +70,26 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true" />
             </LinearLayout>
+
         </RelativeLayout>
-
-        <!-- title -->
+        <!-- 라인 -->
         <LinearLayout
+            android:background="@color/gary"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:orientation="horizontal"
-            android:background="@drawable/border_top_bottom_title"
-            android:gravity="center_vertical"
-            >
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:text="설비명"
-                />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:text="TAG NO"
-                />
-        </LinearLayout>
-
+            android:layout_height="1.0dip" />
     </LinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
-    android:id="@+id/swipeRefreshLo"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@id/search_top">
-
-        <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView1"
+        android:id="@+id/swipeRefreshLo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:layout_below="@id/search_top">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

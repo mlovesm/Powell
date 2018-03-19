@@ -32,8 +32,6 @@ import com.gun0912.tedpermission.TedPermission;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,11 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
 //    adb shell dumpsys activity activities | findstr "Run"
     private static final String TAG = "MainActivity";
-    public static String ipAddress= "http://w-cms.co.kr:9090";
-//    public static String ipAddress= "http://192.168.0.22:9191";
-    public static String contextPath= "/m_wcms";
-    public static String comp_database;
-    public static String ori_comp_database;
+//    public static String ipAddress= "http://w-cms.co.kr:9090";
+    public static String ipAddress= "http://192.168.0.22:9191";
+    public static String contextPath= "/powell";
     private ProgressDialog pDlalog = null;
     private RetrofitService service;
     private String fileDir= Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator  + "Download" + File.separator;
@@ -71,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
     public static String loginUserId;
     public static String loginName;
     public static String latestAppVer;
-    public static String comp_id;
-    public static String use_part1;
-    private int user_auth;
 
     @Bind(R.id.textView1) TextView textView1;
 
@@ -85,14 +78,8 @@ public class MainActivity extends AppCompatActivity {
         backPressCloseSystem = new BackPressCloseSystem(this);
         service= RetrofitService.rest_api.create(RetrofitService.class);
 
-        comp_database = pref.getValue("COMP_DATABASE","");
-        ori_comp_database = pref.getValue("ORI_COMP_DATABASE","");
         loginUserId = pref.getValue("userId","");
         latestAppVer = pref.getValue("LATEST_APP_VER","");
-        comp_id = pref.getValue("comp_id","");
-        user_auth= pref.getValue("user_auth", 0);
-        use_part1= pref.getValue("use_part1", "");
-        UtilClass.logD(TAG, "user_auth= "+user_auth);
 
         String currentAppVer= getAppVersion(this);
         UtilClass.logD(TAG, "currentAppVer="+currentAppVer+", latestAppVer="+latestAppVer);
@@ -105,21 +92,19 @@ public class MainActivity extends AppCompatActivity {
         token = FirebaseInstanceId.getInstance().getToken();
         UtilClass.logD(TAG, "Refreshed token: " + token);
 
-        async_progress_dialog();
+//        async_progress_dialog();
 
         permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
 //                Toast.makeText(getApplicationContext(), "권한 허가", Toast.LENGTH_SHORT).show();
                 phone_num= getPhoneNumber();
-                postData();
             }
 
             @Override
             public void onPermissionDenied(ArrayList<String> deniedPermissions) {
                 Toast.makeText(getApplicationContext(), "권한 거부 목록\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                 phone_num="";
-                postData();
             }
         };
         new TedPermission(MainActivity.this)
@@ -174,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.imageView2)
     public void getMenu2() {
         Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
-//        intent.putExtra("title", "도면관리");
         intent.putExtra("title", "테스트");
         startActivity(intent);
     }
@@ -188,42 +172,26 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.imageView4)
     public void getMenu4() {
-        if(user_auth==0){
-            Toast.makeText(getApplicationContext(), "해당 권한이 없습니다.", Toast.LENGTH_SHORT).show();
-        }else{
-            Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
-            intent.putExtra("title", "점검관리");
-            startActivity(intent);
-        }
+        Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
+        intent.putExtra("title", "점검관리");
+        startActivity(intent);
+
 
     }
 
     @OnClick(R.id.imageView5)
     public void getMenu5() {
-        if(user_auth==0){
-            Toast.makeText(getApplicationContext(), "해당 권한이 없습니다.", Toast.LENGTH_SHORT).show();
-        }else {
-            Intent intent = new Intent(getBaseContext(), NFCMenuActivity.class);
-            intent.putExtra("title", "NFC관리");
-            startActivity(intent);
-        }
+        Intent intent = new Intent(getBaseContext(), NFCMenuActivity.class);
+        intent.putExtra("title", "NFC관리");
+        startActivity(intent);
+
     }
 
-    @OnClick(R.id.imageView6)
-    public void getMenu6() {
-        if(user_auth==0){
-            Toast.makeText(getApplicationContext(), "해당 권한이 없습니다.", Toast.LENGTH_SHORT).show();
-        }else {
-            Intent intent = new Intent(getBaseContext(), FragMenuActivity.class);
-            intent.putExtra("title", "점검승인");
-            startActivity(intent);
-        }
-    }
 
     public void async_progress_dialog(){
         service = RetrofitService.rest_api.create(RetrofitService.class);
 
-        Call<Datas> call = service.listData("Check","unCheckList", use_part1);
+        Call<Datas> call = service.listData("Check","unCheckList", "");
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -248,47 +216,6 @@ public class MainActivity extends AppCompatActivity {
             public void onFailure(Call<Datas> call, Throwable t) {
                 UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
                 Toast.makeText(getApplicationContext(), "onFailure UnCheck",Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    //푸시 데이터 전송
-    public void postData() {
-        String userId= pref.getValue("userId","");
-        String android_id = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-
-        Map<String, Object> map = new HashMap();
-        map.put("Token",token);
-        map.put("phone_num",phone_num);
-        map.put("userId",userId);
-        map.put("and_id",android_id);
-
-        pDlalog = new ProgressDialog(MainActivity.this);
-        UtilClass.showProcessingDialog(pDlalog);
-
-        service = RetrofitService.rest_api.create(RetrofitService.class);
-        Call<Datas> call = service.sendData("Board","fcmTokenData",map);
-
-        call.enqueue(new Callback<Datas>() {
-            @Override
-            public void onResponse(Call<Datas> call, Response<Datas> response) {
-                UtilClass.logD(TAG, "response="+response);
-                if (response.isSuccessful()) {
-                    UtilClass.logD(TAG, "isSuccessful="+response.body().toString());
-                    String status= response.body().getStatus();
-
-                }else{
-                    Toast.makeText(getApplicationContext(), "handleResponse Main",Toast.LENGTH_SHORT).show();
-                }
-                if(pDlalog!=null) pDlalog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<Datas> call, Throwable t) {
-                if(pDlalog!=null) pDlalog.dismiss();
-                UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
-                Toast.makeText(getApplicationContext(), "토큰 생성에 실패하였습니다.",Toast.LENGTH_SHORT).show();
             }
         });
 

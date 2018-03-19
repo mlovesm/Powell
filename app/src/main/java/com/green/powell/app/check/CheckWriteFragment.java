@@ -9,11 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -79,8 +74,7 @@ public class CheckWriteFragment extends Fragment {
     @Bind(R.id.stime_button) TextView tvData2;
     @Bind(R.id.etime_button) TextView tvData3;
     @Bind(R.id.spinner1) Spinner spn_usePart1;
-    @Bind(R.id.spinner2) Spinner spn_usePart2;
-    @Bind(R.id.spinner3) Spinner spn_equip;
+    @Bind(R.id.spinner2) Spinner spn_equip;
     @Bind(R.id.listView1) AnimatedExpandableListView expandableList;
     @Bind(R.id.linear2) LinearLayout deleteButton;
 
@@ -100,6 +94,7 @@ public class CheckWriteFragment extends Fragment {
     private int selectedPostion2=0;
     private String selectedPostionKey3;
     private int selectedPostion3=0;
+
     private String selectUsePart2NM;
     private String selectEquipNM;
 
@@ -185,20 +180,20 @@ public class CheckWriteFragment extends Fragment {
 
         }
 
+//        spn_usePart1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                KeyValueArrayAdapter adapter = (KeyValueArrayAdapter) parent.getAdapter();
+//                selectUsePart1Key= adapter.getEntryValue(position);
+//                UtilClass.logD("LOG", "KEY : " + adapter.getEntryValue(position));
+//                UtilClass.logD("LOG", "VALUE : " + adapter.getEntry(position));
+//                getUsePart2Data();
+//            }
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//            }
+//        });
         spn_usePart1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                KeyValueArrayAdapter adapter = (KeyValueArrayAdapter) parent.getAdapter();
-                selectUsePart1Key= adapter.getEntryValue(position);
-                UtilClass.logD("LOG", "KEY : " + adapter.getEntryValue(position));
-                UtilClass.logD("LOG", "VALUE : " + adapter.getEntry(position));
-                getUsePart2Data();
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-        spn_usePart2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 KeyValueArrayAdapter adapter = (KeyValueArrayAdapter) parent.getAdapter();
@@ -437,54 +432,54 @@ public class CheckWriteFragment extends Fragment {
             }
         });
     }
-
-    public void getUsePart2Data() {
-        Call<Datas> call = service.listData("Check","usePart2List", "parent_cd", selectUsePart1Key);
-        call.enqueue(new Callback<Datas>() {
-            @Override
-            public void onResponse(Call<Datas> call, Response<Datas> response) {
-                UtilClass.logD(TAG, "response="+response);
-                if (response.isSuccessful()) {
-                    UtilClass.logD(TAG, "isSuccessful="+response.body().toString());
-                    String status= response.body().getStatus();
-
-                    try {
-                        if(response.body().getCount()==0){
-                            Toast.makeText(getActivity(), "데이터가 없습니다.", Toast.LENGTH_SHORT).show();
-                        }
-                        usePart2KeyList = new String[response.body().getList().size()];
-                        usePart2ValueList = new String[response.body().getList().size()];
-                        for(int i=0; i<response.body().getList().size();i++){
-                            usePart2KeyList[i]= response.body().getList().get(i).get("CHILD_CD").toString();
-                            if(usePart2KeyList[i].equals(selectedPostionKey2))  selectedPostion2= i;
-                            usePart2ValueList[i]= response.body().getList().get(i).get("CHILD_NM").toString();
-                        }
-                        KeyValueArrayAdapter adapter = new KeyValueArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        adapter.setEntries(usePart2ValueList);
-                        adapter.setEntryValues(usePart2KeyList);
-
-                        spn_usePart2.setPrompt("사용공정");
-                        spn_usePart2.setAdapter(adapter);
-                        spn_usePart2.setSelection(selectedPostion2);
-                    } catch ( Exception e ) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity(), "에러코드 CheckWrite 4", Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    Toast.makeText(getActivity(), "response isFailed", Toast.LENGTH_SHORT).show();
-                }
-                if(pDlalog!=null) pDlalog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<Datas> call, Throwable t) {
-                if(pDlalog!=null) pDlalog.dismiss();
-                UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
-                Toast.makeText(getActivity(), "onFailure Equipment",Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+//
+//    public void getUsePart2Data() {
+//        Call<Datas> call = service.listData("Check","usePart2List", "parent_cd", selectUsePart1Key);
+//        call.enqueue(new Callback<Datas>() {
+//            @Override
+//            public void onResponse(Call<Datas> call, Response<Datas> response) {
+//                UtilClass.logD(TAG, "response="+response);
+//                if (response.isSuccessful()) {
+//                    UtilClass.logD(TAG, "isSuccessful="+response.body().toString());
+//                    String status= response.body().getStatus();
+//
+//                    try {
+//                        if(response.body().getCount()==0){
+//                            Toast.makeText(getActivity(), "데이터가 없습니다.", Toast.LENGTH_SHORT).show();
+//                        }
+//                        usePart2KeyList = new String[response.body().getList().size()];
+//                        usePart2ValueList = new String[response.body().getList().size()];
+//                        for(int i=0; i<response.body().getList().size();i++){
+//                            usePart2KeyList[i]= response.body().getList().get(i).get("CHILD_CD").toString();
+//                            if(usePart2KeyList[i].equals(selectedPostionKey2))  selectedPostion2= i;
+//                            usePart2ValueList[i]= response.body().getList().get(i).get("CHILD_NM").toString();
+//                        }
+//                        KeyValueArrayAdapter adapter = new KeyValueArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item);
+//                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                        adapter.setEntries(usePart2ValueList);
+//                        adapter.setEntryValues(usePart2KeyList);
+//
+//                        spn_usePart2.setPrompt("사용공정");
+//                        spn_usePart2.setAdapter(adapter);
+//                        spn_usePart2.setSelection(selectedPostion2);
+//                    } catch ( Exception e ) {
+//                        e.printStackTrace();
+//                        Toast.makeText(getActivity(), "에러코드 CheckWrite 4", Toast.LENGTH_SHORT).show();
+//                    }
+//                }else{
+//                    Toast.makeText(getActivity(), "response isFailed", Toast.LENGTH_SHORT).show();
+//                }
+//                if(pDlalog!=null) pDlalog.dismiss();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Datas> call, Throwable t) {
+//                if(pDlalog!=null) pDlalog.dismiss();
+//                UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
+//                Toast.makeText(getActivity(), "onFailure Equipment",Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     public void getEquipData() {
         Call<Datas> call = service.listData("Check","equipList", "use_part", selectUsePart1Key, selectUsePart2Key);

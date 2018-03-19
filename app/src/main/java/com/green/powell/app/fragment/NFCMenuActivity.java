@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.green.powell.app.R;
 import com.green.powell.app.check.CheckFragment;
-import com.green.powell.app.draw.DrawFragment;
 import com.green.powell.app.equipment.EquipmentFragment;
 import com.green.powell.app.menu.LoginActivity;
 import com.green.powell.app.menu.SettingActivity;
@@ -95,8 +94,6 @@ public class NFCMenuActivity extends AppCompatActivity{
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         if(title.equals("장치관리")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new EquipmentFragment());
-        }else if(title.equals("도면관리")){
-            fragmentTransaction.replace(R.id.fragmentReplace, frag = new DrawFragment());
         }else if(title.equals("MSDS관리")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new CheckFragment());
         }else if(title.equals("점검관리")){

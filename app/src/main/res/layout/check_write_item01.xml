@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardCornerRadius="@dimen/cardview_round_basic">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginBottom="5dp"
     android:background="@color/white"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="38dp"
-        android:background="@drawable/border_bottom"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp" />
-
         <TextView
+            android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center|left"
-            android:layout_marginLeft="25dp"
             android:textSize="14sp"
             android:textColor="@color/font_333"
             android:textStyle="bold"
-            android:text="유해화학물질의 이송배관"
-            android:id="@+id/textView1"
+            android:text="이송배관"
             android:ellipsize="end"
             android:maxLines="1"
             android:layout_alignParentStart="true"
-            android:layout_toStartOf="@+id/chk_state" />
+            android:layout_toStartOf="@+id/chk_state"
+            />
 
         <!-- 버튼 -->
         <LinearLayout
+            android:id="@+id/chk_state"
             android:layout_width="50dp"
             android:layout_height="30dp"
             android:layout_weight="1.0"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="10dp"
-            android:id="@+id/chk_state">
+            android:layout_marginLeft="6dp"
+            >
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -55,13 +55,12 @@
                 android:textColor="@color/white"
                 android:gravity="center"
                 android:id="@+id/textView2"
-                android:background="@drawable/box_green" />
+                android:background="@drawable/box_green"
+                />
         </LinearLayout>
     </RelativeLayout>
-
+    <!--이상 =  "@drawable/box_red" -->
     <!--검토 =  "@drawable/box_yellow" -->
     <!--즉시 =  "@drawable/box_blue" -->
-    <!--긴급 =  "@drawable/box_red" -->
-
-
 </LinearLayout>
+</android.support.v7.widget.CardView>

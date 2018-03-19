@@ -14,6 +14,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,12 +24,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.green.powell.app.R;
@@ -34,6 +36,7 @@ import com.green.powell.app.adaptor.EquipmentAdapter;
 import com.green.powell.app.fragment.FragMenuActivity;
 import com.green.powell.app.retrofit.Datas;
 import com.green.powell.app.retrofit.RetrofitService;
+import com.green.powell.app.util.KeyValueArrayAdapter;
 import com.green.powell.app.util.UtilClass;
 
 import java.util.ArrayList;
@@ -46,18 +49,27 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class EquipmentFragment extends Fragment {
-    private static final String TAG = "EquipmentFragment";
+public class EquipmentFragment extends Fragment implements EquipmentAdapter.CardViewClickListener, SwipeRefreshLayout.OnRefreshListener{
+    private final String TAG = this.getClass().getSimpleName();
     private RetrofitService service;
     private String title;
     private ProgressDialog pDlalog = null;
 
     private ArrayList<HashMap<String,Object>> arrayList;
     private EquipmentAdapter mAdapter;
-    @Bind(R.id.listView1) ListView listView;
+    @Bind(R.id.swipeRefreshLo) SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.recyclerView1) RecyclerView mRecyclerView;
 
     @Bind(R.id.search_top) LinearLayout layout;
-    @Bind(R.id.editText1) EditText et_search;
+    @Bind(R.id.spinner1) Spinner spn_group;
+
+    private String[] groupKeyList;
+    private String[] groupValueList;
+    String selectGroupNoKey;
+    String selectGroupName;
+
+    private String selectedPostionKey;  //스피너 선택된 키값
+    private int selectedPostion=0;    //스피너 선택된 Row 값
 
     //NFC
     private NfcAdapter nfcAdapter;
@@ -68,6 +80,9 @@ public class EquipmentFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        service = RetrofitService.rest_api.create(RetrofitService.class);
+        title= getArguments().getString("title");
         setHasOptionsMenu(true);
     }
 
@@ -76,13 +91,26 @@ public class EquipmentFragment extends Fragment {
         View view = inflater.inflate(R.layout.equipment_list, container, false);
         ButterKnife.bind(this, view);
 
-        service = RetrofitService.rest_api.create(RetrofitService.class);
-        title= getArguments().getString("title");
-        layout.setVisibility(View.GONE);
+        setRecyclerView();
+        getEquipGroupData();
 
-        async_progress_dialog();
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        //색상지정
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.yellow, R.color.red, R.color.black, R.color.blue);
 
-        listView.setOnItemClickListener(new ListViewItemClickListener());
+        spn_group.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                KeyValueArrayAdapter adapter = (KeyValueArrayAdapter) parent.getAdapter();
+                selectGroupNoKey= adapter.getEntryValue(position);
+                UtilClass.logD("LOG", "KEY : " + adapter.getEntryValue(position));
+                UtilClass.logD("LOG", "VALUE : " + adapter.getEntry(position));
+                async_progress_dialog();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         //NFC
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//화면 자동 꺼짐 방지.
@@ -112,6 +140,24 @@ public class EquipmentFragment extends Fragment {
 
         return view;
     }//onCreateView
+
+    private void setRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+    }
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        int resId = R.anim.layout_animation_from_right;
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, resId);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -160,13 +206,8 @@ public class EquipmentFragment extends Fragment {
         alertDlg.show();
     }
 
-    public void async_progress_dialog(){
-        RetrofitService service = RetrofitService.rest_api.create(RetrofitService.class);
-
-        pDlalog = new ProgressDialog(getActivity());
-        UtilClass.showProcessingDialog(pDlalog);
-
-        Call<Datas> call = service.listData("Equipment","equipmentList", et_search.getText().toString());
+    public void getEquipGroupData() {
+        Call<Datas> call = service.listData("Equipment","equipGroupList");
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -179,20 +220,23 @@ public class EquipmentFragment extends Fragment {
                         if(response.body().getCount()==0){
                             Toast.makeText(getActivity(), "데이터가 없습니다.", Toast.LENGTH_SHORT).show();
                         }
-                        arrayList = new ArrayList<>();
-                        arrayList.clear();
+                        groupKeyList = new String[response.body().getList().size()];
+                        groupValueList = new String[response.body().getList().size()];
                         for(int i=0; i<response.body().getList().size();i++){
-                            HashMap<String,Object> hashMap = new HashMap<>();
-                            hashMap.put("key",response.body().getList().get(i).get("EQUIP_NO").toString());
-                            hashMap.put("data1",response.body().getList().get(i).get("EQUIP_NO").toString());
-                            hashMap.put("data2",response.body().getList().get(i).get("EQUIP_NM").toString());
-                            hashMap.put("data3",response.body().getList().get(i).get("MSDS_NM").toString().trim());
-                            hashMap.put("data4",response.body().getList().get(i).get("MSDS_TYPE").toString());
-                            arrayList.add(hashMap);
+                            groupKeyList[i]= response.body().getList().get(i).get("EGROUP_NO").toString();
+                            if(groupKeyList[i].equals(selectedPostionKey))  selectedPostion= i;
+                            groupValueList[i]= response.body().getList().get(i).get("EGROUP_NM").toString();
                         }
 
-                        mAdapter = new EquipmentAdapter(getActivity(), arrayList);
-                        listView.setAdapter(mAdapter);
+                        KeyValueArrayAdapter adapter = new KeyValueArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        adapter.setEntries(groupValueList);
+                        adapter.setEntryValues(groupKeyList);
+
+                        spn_group.setPrompt("그룹");
+                        spn_group.setAdapter(adapter);
+                        spn_group.setSelection(selectedPostion);
+
                     } catch ( Exception e ) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "에러코드 Equipment 1", Toast.LENGTH_SHORT).show();
@@ -212,39 +256,92 @@ public class EquipmentFragment extends Fragment {
         });
     }
 
+    public void async_progress_dialog(){
+        pDlalog = new ProgressDialog(getActivity());
+        UtilClass.showProcessingDialog(pDlalog);
+
+        Call<Datas> call = service.listData("Equipment","equipmentList", selectGroupNoKey);
+        call.enqueue(new Callback<Datas>() {
+            @Override
+            public void onResponse(Call<Datas> call, Response<Datas> response) {
+                UtilClass.logD(TAG, "response="+response);
+                if (response.isSuccessful()) {
+                    UtilClass.logD(TAG, "isSuccessful="+response.body().toString());
+                    String status= response.body().getStatus();
+
+                    try {
+                        if(response.body().getCount()==0){
+                            Toast.makeText(getActivity(), "데이터가 없습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                        arrayList = new ArrayList<>();
+                        arrayList.clear();
+                        for(int i=0; i<response.body().getList().size();i++){
+                            HashMap<String,Object> hashMap = new HashMap<>();
+                            hashMap.put("key",response.body().getList().get(i).get("EQUIP_NO").toString());
+                            hashMap.put("data1",response.body().getList().get(i).get("EQUIP_NM").toString());
+                            hashMap.put("data2",response.body().getList().get(i).get("SPEC1").toString());
+                            hashMap.put("data3",response.body().getList().get(i).get("TAG_NO").toString().trim());
+                            arrayList.add(hashMap);
+                        }
+                        mAdapter = new EquipmentAdapter(getActivity(),R.layout.equipment_list_item, arrayList, "Equipment", EquipmentFragment.this);
+                        mRecyclerView.setAdapter(mAdapter);
+
+                        runLayoutAnimation(mRecyclerView);
+
+                    } catch ( Exception e ) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "에러코드 Equipment 2", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(getActivity(), "response isFailed", Toast.LENGTH_SHORT).show();
+                }
+                if(pDlalog!=null) pDlalog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<Datas> call, Throwable t) {
+                if(pDlalog!=null) pDlalog.dismiss();
+                UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
+                Toast.makeText(getActivity(), "onFailure Equipment",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     //해당 검색값 데이터 조회
     @OnClick(R.id.imageView1)
     public void onSearchColumn() {
-        //검색하면 키보드 내리기
-        InputMethodManager imm= (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(et_search.getWindowToken(), 0);
-
-        if(et_search.getText().toString().length()==0){
-            Toast.makeText(getActivity(), "장비명을 입력하세요.", Toast.LENGTH_SHORT).show();
-        }else{
-            async_progress_dialog();
-        }
+        async_progress_dialog();
 
     }
 
-    //ListView의 item (상세)
-    private class ListViewItemClickListener implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Fragment frag = null;
-            Bundle bundle = new Bundle();
+    @Override
+    public void onCardClick(int position) {
+        Fragment frag = null;
+        Bundle bundle = new Bundle();
 
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragmentTransaction.replace(R.id.fragmentReplace, frag = new EquipmentViewFragment());
-            bundle.putString("title", title+"상세");
-            String key= arrayList.get(position).get("key").toString();
-            bundle.putString("equip_no", key);
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentReplace, frag = new EquipmentViewFragment());
+        bundle.putString("title", title+"상세");
+        String key= arrayList.get(position).get("key").toString();
+        bundle.putString("equip_no", key);
 
-            frag.setArguments(bundle);
-            fragmentTransaction.addToBackStack(title+"상세");
-            fragmentTransaction.commit();
-        }
+        frag.setArguments(bundle);
+        fragmentTransaction.addToBackStack(title+"상세");
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        mRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                async_progress_dialog();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        },500);
+
     }
 
     /************************************

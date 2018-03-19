@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimary"
+    android:background="@drawable/main_bg"
     android:gravity="center"
     android:layout_centerVertical="true"
     >
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/intro_logo"
+        android:src="@drawable/main_logo"
         android:layout_marginTop="20dp"
         android:scaleType="fitCenter" />
 
@@ -89,13 +89,13 @@
             android:id="@id/button1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/button_vertical_padding"
+            android:padding="16dp"
             android:layout_marginTop="30dp"
-            android:text="로그인"
-            android:textColor="@color/white"
-            android:textSize="22sp"
+            android:text="LOGIN"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:background="@color/blue_dark"
+            android:background="@drawable/box_white"
             />
     </LinearLayout>
 </LinearLayout>

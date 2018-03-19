@@ -134,9 +134,9 @@ public class UnCheckTab1Fragment extends Fragment {
 
                         tv_data4.setText(response.body().getList().get(0).get("MAX_DATE").toString().trim());
                         tv_data5.setText(response.body().getList().get(0).get("USER_NM").toString().trim());
-                        tv_data6.setText(Double.valueOf((double) response.body().getList().get(0).get("CHECK_CNT")).intValue()
+                        tv_data6.setText(String.valueOf(Double.valueOf(response.body().getList().get(0).get("CHECK_CNT")).intValue())
                             +response.body().getList().get(0).get("TYPE_KOR").toString());
-                        tv_data7.setText(Double.valueOf((double) response.body().getList().get(0).get("OVER_CNT")).intValue()
+                        tv_data7.setText(String.valueOf(Double.valueOf(response.body().getList().get(0).get("OVER_CNT")).intValue())
                                 +response.body().getList().get(0).get("TYPE_KOR").toString());
 
                     } catch ( Exception e ) {

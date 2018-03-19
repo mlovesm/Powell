@@ -31,7 +31,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private ProgressDialog pDlalog = null;
-    private String android_id;
     private boolean valid = true;
 
     private BackPressCloseSystem backPressCloseSystem;
@@ -47,7 +46,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         ButterKnife.bind(this);
-        android_id = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
         backPressCloseSystem = new BackPressCloseSystem(this);
         loadLoginData();
 
@@ -74,20 +72,9 @@ public class LoginActivity extends AppCompatActivity {
         String user_id= _user_id.getText().toString();
         String user_pwStr= _user_pw.getText().toString();
         String latest_app_ver="";
-        String comp_database="";
-        String ori_comp_database="";
-        String and_id="";
-        String comp_id="";
-        String use_part1="";
-        int user_auth= 0;
         try {
             latest_app_ver= response.body().getLATEST_APP_VER();
-            comp_database= response.body().getCOMP_DATABASE();
-            ori_comp_database= response.body().getORI_COMP_DATABASE();
-            and_id= response.body().getAnd_id();
-            comp_id= response.body().getComp_id();
-            user_auth= response.body().getUser_auth();
-            use_part1= response.body().getUse_part1();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -95,12 +82,6 @@ public class LoginActivity extends AppCompatActivity {
         pref.put("userId",user_id);
         pref.put("userPw",user_pwStr);
         pref.put("LATEST_APP_VER",latest_app_ver);
-        pref.put("COMP_DATABASE",comp_database);
-        pref.put("ORI_COMP_DATABASE",ori_comp_database);
-        pref.put("and_id",and_id);
-        pref.put("comp_id",comp_id);
-        pref.put("user_auth",user_auth);
-        pref.put("use_part1",use_part1);
     }
 
     private void loadLoginData() {
@@ -123,7 +104,6 @@ public class LoginActivity extends AppCompatActivity {
         Map<String, Object> map = new HashMap();
         map.put("id",_user_id.getText());
         map.put("password",_user_pw.getText());
-        map.put("and_id",android_id);
 
         pDlalog = new ProgressDialog(LoginActivity.this);
         UtilClass.showProcessingDialog(pDlalog);
@@ -151,14 +131,6 @@ public class LoginActivity extends AppCompatActivity {
 
                         } catch (Exception e) {
                             Toast.makeText(getApplicationContext(),"에러코드  Login 2",Toast.LENGTH_SHORT).show();
-                        }
-                    }else if( response.body().getResult()==3) {
-                        try {
-                            int flag= response.body().getFlag();
-                            onLoginFailed3(flag);
-
-                        } catch (Exception e) {
-                            Toast.makeText(getApplicationContext(),"에러코드  Login 3",Toast.LENGTH_SHORT).show();
                         }
                     }else{
                         Log.d(TAG,"Data is Null");
@@ -211,23 +183,6 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginFailed2() {
         Toast.makeText(getBaseContext(), "접속에 실패 하였습니다.\n서버 정보를 확인해 주세요.", Toast.LENGTH_LONG).show();
-        loginButton.setEnabled(true);
-    }
-
-    public void onLoginFailed3(int flag) {
-        if(flag==1){
-            Toast.makeText(getBaseContext(), "접속에 실패 하였습니다.\n아이디 또는 비밀번호를 확인해 주세요.", Toast.LENGTH_LONG).show();
-        }else if(flag==2){
-            Toast.makeText(getBaseContext(), "해당아이디는 사용권한이 없습니다.\n관리자에게 문의 바랍니다.", Toast.LENGTH_LONG).show();
-        }else if(flag==3){
-            Toast.makeText(getBaseContext(), "해당업체는 사용권한이 없습니다.\n관리자에게 문의 바랍니다.", Toast.LENGTH_LONG).show();
-        }else if(flag==4){
-            Toast.makeText(getBaseContext(), "사용기간이 만료되었습니다.\n관리자에게 문의 바랍니다.", Toast.LENGTH_LONG).show();
-        }else if(flag==5){
-            Toast.makeText(getBaseContext(), "현재기기에 등록된 아이디가 아닙니다.\n관리자에게 문의 바랍니다.", Toast.LENGTH_LONG).show();
-        }else{
-            Toast.makeText(getBaseContext(), "현재 아이디가 다른기기에 등록되있습니다.\n관리자에게 문의 바랍니다.", Toast.LENGTH_LONG).show();
-        }
         loginButton.setEnabled(true);
     }
 
