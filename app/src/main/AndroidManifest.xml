@@ -87,8 +87,6 @@
         </activity>
         <activity android:name="com.green.powell.app.check.ApprovalDialogActivity" android:theme="@style/Theme.AppCompat.Light.Dialog">
         </activity>
-        <activity android:name="com.green.powell.app.equipment.MapsActivity">
-        </activity>
 
     </application>
 

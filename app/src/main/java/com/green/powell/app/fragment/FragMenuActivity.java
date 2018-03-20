@@ -25,10 +25,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.green.powell.app.R;
-import com.green.powell.app.check.CheckApprovalFragment;
+import com.green.powell.app.check.CheckFragment;
 import com.green.powell.app.check.CheckWriteFragment;
-import com.green.powell.app.check.TestCheckFragment;
-import com.green.powell.app.check.TestViewFragment;
 import com.green.powell.app.check.UnCheckFragment;
 import com.green.powell.app.equipment.EquipmentFragment;
 import com.green.powell.app.equipment.EquipmentViewFragment;
@@ -52,8 +50,7 @@ import retrofit2.Response;
 
 public class FragMenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "FragMenuActivity";
-    private SettingPreference pref = new SettingPreference("loginData",this);
+    private final String TAG = this.getClass().getSimpleName();
     private RetrofitService service;
     private String title;
 
@@ -209,19 +206,16 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
         if(title.equals("미점검리스트")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new UnCheckFragment());
 
-        }else if(title.equals("장치관리")){
+        }else if(title.equals("설비정보")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new EquipmentFragment());
 
-        }else if(title.equals("장치관리상세")){
+        }else if(title.equals("설비정보상세")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new EquipmentViewFragment());
             bundle.putString("equip_no", equip_no);
 
-        }else if(title.equals("테스트")){
-            fragmentTransaction.replace(R.id.fragmentReplace, frag = new TestViewFragment());
-
-        }else if(title.equals("점검관리")){
-            fragmentTransaction.replace(R.id.fragmentReplace, frag = new TestCheckFragment());
-
+        }else if(title.equals("일상점검")||title.equals("정기점검")){
+            fragmentTransaction.replace(R.id.fragmentReplace, frag = new CheckFragment());
+            bundle.putString("gubun", getIntent().getStringExtra("gubun"));
 
         }else if(title.equals("NFC관리")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new SettingActivity());
@@ -239,9 +233,6 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
             bundle.putString("mode",getIntent().getStringExtra("mode"));
             bundle.putString("use_part1",getIntent().getStringExtra("use_part1"));
             bundle.putString("use_part2",getIntent().getStringExtra("use_part2"));
-
-        }else if(title.equals("점검승인")){
-            fragmentTransaction.replace(R.id.fragmentReplace, frag = new CheckApprovalFragment());
 
         }else{
             return;
@@ -417,7 +408,7 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
 
         if (id == R.id.nav_menu1) {
             intent = new Intent(getApplicationContext(),FragMenuActivity.class);
-            intent.putExtra("title", "장치관리");
+            intent.putExtra("title", "설비정보");
 
         } else if (id == R.id.nav_menu2) {
             intent = new Intent(getApplicationContext(),FragMenuActivity.class);

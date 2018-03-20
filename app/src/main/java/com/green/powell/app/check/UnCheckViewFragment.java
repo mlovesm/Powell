@@ -89,7 +89,6 @@ public class UnCheckViewFragment extends Fragment {
             switch (position){
                 case 0 : return new UnCheckTab1Fragment(idx);
                 case 1 : return new UnCheckTab2Fragment(idx);
-//                case 2 : return new UnCheckTab3Fragment(idx);
             }
             return null;
         }

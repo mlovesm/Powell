@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         UtilClass.logD(TAG, "currentAppVer="+currentAppVer+", latestAppVer="+latestAppVer);
         if(!currentAppVer.equals(latestAppVer)){
             //최신버전이 아닐때
-            fileNm= "wcms_"+latestAppVer+"-debug.apk";
+            fileNm= "powell_"+latestAppVer+"-debug.apk";
 //            alertDialog();
         }
 
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         backPressCloseSystem.onBackPressed();
     }
 
-    @OnClick({R.id.textView1, R.id.textButton1})
+    @OnClick({R.id.mainImage1, R.id.button1})
     public void getUnCheckList() {
         Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
         intent.putExtra("title", "미점검리스트");
@@ -152,38 +152,32 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.imageView1)
     public void getMenu1() {
         Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
-        intent.putExtra("title", "장치관리");
+        intent.putExtra("title", "설비정보");
         startActivity(intent);
     }
 
     @OnClick(R.id.imageView2)
     public void getMenu2() {
-        Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
-        intent.putExtra("title", "테스트");
+        Intent intent = new Intent(getBaseContext(), NFCMenuActivity.class);
+        intent.putExtra("title", "NFC관리");
         startActivity(intent);
     }
 
     @OnClick(R.id.imageView3)
     public void getMenu3() {
         Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
-        intent.putExtra("title", "MSDS관리");
+        intent.putExtra("title", "일상점검");
+        intent.putExtra("gubun","Y");
         startActivity(intent);
     }
 
     @OnClick(R.id.imageView4)
     public void getMenu4() {
         Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
-        intent.putExtra("title", "점검관리");
+        intent.putExtra("title", "정기점검");
+        intent.putExtra("gubun","N");
         startActivity(intent);
 
-
-    }
-
-    @OnClick(R.id.imageView5)
-    public void getMenu5() {
-        Intent intent = new Intent(getBaseContext(), NFCMenuActivity.class);
-        intent.putExtra("title", "NFC관리");
-        startActivity(intent);
 
     }
 

@@ -93,8 +93,7 @@ public class AnyExpandableAdapter extends AnimatedExpandableListView.AnimatedExp
         if (v == null) {
             groupHolder = new GroupHolder();
             v = inflater.inflate(R.layout.check_write_item01, parent, false);
-            //LayoutInflater infalInflater = (LayoutInflater) this.mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            //convertView = infalInflater.inflate(R.layout.check_write_item01, null);
+
             groupHolder.title = (TextView) v.findViewById(R.id.textView1);
             groupHolder.state = (TextView) v.findViewById(R.id.textView2);
 
@@ -111,14 +110,8 @@ public class AnyExpandableAdapter extends AnimatedExpandableListView.AnimatedExp
             groupHolder.state.setBackgroundResource(R.drawable.box_green);
             state="양호";
         }else if(headerItems.getState().equals("2")){
-            groupHolder.state.setBackgroundResource(R.drawable.box_yellow);
-            state="검토";
-        }else if(headerItems.getState().equals("3")){
-            groupHolder.state.setBackgroundResource(R.drawable.box_blue);
-            state="즉시";
-        }else if(headerItems.getState().equals("4")){
             groupHolder.state.setBackgroundResource(R.drawable.box_red);
-            state="긴급";
+            state="고장";
         }else{
             groupHolder.state.setBackgroundResource(R.drawable.box_basic);
             state="미점검";

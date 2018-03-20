@@ -124,7 +124,7 @@ public class EquipmentFragment extends Fragment implements EquipmentAdapter.Card
         }
 
         Intent targetIntent = new Intent(getActivity(), FragMenuActivity.class);
-        targetIntent.putExtra("pendingIntent", "장치관리상세");
+        targetIntent.putExtra("pendingIntent", title+"상세");
         targetIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mPendingIntent = PendingIntent.getActivity(getActivity(), 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 

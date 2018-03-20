@@ -3,38 +3,44 @@ package com.green.powell.app.check;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Rect;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.NfcF;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.green.powell.app.R;
 import com.green.powell.app.adaptor.CheckAdapter;
 import com.green.powell.app.fragment.FragMenuActivity;
-import com.green.powell.app.menu.MainActivity;
 import com.green.powell.app.retrofit.Datas;
 import com.green.powell.app.retrofit.RetrofitService;
 import com.green.powell.app.util.UtilClass;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import butterknife.Bind;
@@ -44,14 +50,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CheckFragment extends Fragment {
-    private static final String TAG = "CheckFragment";
+public class CheckFragment extends Fragment implements CheckAdapter.CardViewClickListener ,SwipeRefreshLayout.OnRefreshListener{
+    private final String TAG = this.getClass().getSimpleName();
     private ProgressDialog pDlalog = null;
+    private String title;
+    private String gubun;
 
     private ArrayList<HashMap<String,String>> arrayList;
     private CheckAdapter mAdapter;
-    @Bind(R.id.listView1) ListView listView;
-    @Bind(R.id.top_title) TextView textTitle;
+
+    @Bind(R.id.swipeRefreshLo) SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.recyclerView1) RecyclerView mRecyclerView;
 
     @Bind(R.id.search_top) LinearLayout layout;
     @Bind(R.id.textButton1) TextView tv_button1;
@@ -66,22 +75,35 @@ public class CheckFragment extends Fragment {
     private String[][] mTechLists;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.check_list, container, false);
-        ButterKnife.bind(this, view);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        textTitle.setText(getArguments().getString("title"));
-        view.findViewById(R.id.top_write).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.top_search).setVisibility(View.VISIBLE);
+        title= getArguments().getString("title");
+        gubun= getArguments().getString("gubun");
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        int resource;
+        if(gubun.equals("Y")){
+            resource= R.layout.test_check_list;
+        }else{
+            resource= R.layout.test_check_list;
+        }
+        View view = inflater.inflate(resource, container, false);
+        ButterKnife.bind(this, view);
 
         tv_button1.setText(UtilClass.getCurrentDate(2));
         tv_button2.setText(UtilClass.getCurrentDate(1));
 
-//        layout.setVisibility(View.GONE);
+        setRecyclerView();
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        //색상지정
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.yellow, R.color.red, R.color.black, R.color.blue);
 
         async_progress_dialog();
-
-        listView.setOnItemClickListener(new ListViewItemClickListener());
 
         //NFC
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);//화면 자동 꺼짐 방지.
@@ -95,7 +117,7 @@ public class CheckFragment extends Fragment {
         }
 
         Intent targetIntent = new Intent(getActivity(), FragMenuActivity.class);
-        targetIntent.putExtra("pendingIntent", "점검관리등록");
+        targetIntent.putExtra("pendingIntent", title+"등록");
         targetIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mPendingIntent = PendingIntent.getActivity(getActivity(), 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -111,6 +133,65 @@ public class CheckFragment extends Fragment {
 
         return view;
     }//onCreateView
+
+    public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+        private int offset;
+
+        public ItemOffsetDecoration(int offset) {
+            this.offset = offset;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view,
+                                   RecyclerView parent, RecyclerView.State state) {
+
+            // Add padding only to the zeroth item
+            if (parent.getChildAdapterPosition(view) == 0) {
+
+                outRect.right = offset;
+                outRect.left = offset;
+                outRect.top = offset;
+                outRect.bottom = offset;
+            }
+        }
+    }
+
+    private void setRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+//        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+//        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+    }
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        int resId = R.anim.layout_animation_from_right;
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, resId);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_write, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_write) {
+            getWriteBoard();
+        }if (item.getItemId() == R.id.action_search) {
+            UtilClass.getSearch(layout);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public void alertDialog(){
         final android.app.AlertDialog.Builder alertDlg = new android.app.AlertDialog.Builder(getActivity());
@@ -164,17 +245,17 @@ public class CheckFragment extends Fragment {
                         for(int i=0; i<response.body().getList().size();i++){
                             HashMap<String,String> hashMap = new HashMap<>();
                             hashMap.put("key",String.valueOf(Double.valueOf(response.body().getList().get(i).get("CHK_NO")).intValue()));
-                            hashMap.put("data1",response.body().getList().get(i).get("CHECK_DATE").toString());
-                            hashMap.put("data2",response.body().getList().get(i).get("PART1_NM").toString());
-                            hashMap.put("data3",response.body().getList().get(i).get("PART2_NM").toString());
-                            hashMap.put("data4",response.body().getList().get(i).get("EQUIP_NM").toString());
-                            hashMap.put("data5",response.body().getList().get(i).get("USER_NM").toString());
-                            hashMap.put("data6",response.body().getList().get(i).get("MAX_CHECK").toString());
+                            hashMap.put("data1",response.body().getList().get(i).get("EQUIP_NM"));
+                            hashMap.put("data2",response.body().getList().get(i).get("CHECK_DATE"));
+                            hashMap.put("data3",response.body().getList().get(i).get("USER_NM"));
+                            hashMap.put("data4",response.body().getList().get(i).get("MAX_CHECK"));
                             arrayList.add(hashMap);
                         }
+                        mAdapter = new CheckAdapter(getActivity(),R.layout.check_list_item, arrayList, "Check", CheckFragment.this);
+                        mRecyclerView.setAdapter(mAdapter);
 
-                        mAdapter = new CheckAdapter(getActivity(), arrayList, "Check");
-                        listView.setAdapter(mAdapter);
+                        runLayoutAnimation(mRecyclerView);
+
                     } catch ( Exception e ) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "에러코드 Check 1", Toast.LENGTH_SHORT).show();
@@ -201,6 +282,7 @@ public class CheckFragment extends Fragment {
         getDialog("SD");
         isSdate=true;
     }
+
     @OnClick(R.id.textButton2)
     public void getDateDialog2() {
         getDialog("ED");
@@ -208,20 +290,15 @@ public class CheckFragment extends Fragment {
     }
 
     public void getDialog(String gubun) {
-        int year, month, day, hour, minute;
-
-        GregorianCalendar calendar = new GregorianCalendar();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day= calendar.get(Calendar.DAY_OF_MONTH);
-        hour = calendar.get(Calendar.HOUR_OF_DAY);
-        minute = calendar.get(Calendar.MINUTE);
-
         if(gubun.equals("SD")){
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, year, month, 1);
+            TextView textView= tv_button1;
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, UtilClass.dateAndTimeChoiceList(textView, "D").get(0)
+                    , UtilClass.dateAndTimeChoiceList(textView, "D").get(1)-1, UtilClass.dateAndTimeChoiceList(textView, "D").get(2));
             dialog.show();
         }else{
-            DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, year, month, day);
+            TextView textView= tv_button2;
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, UtilClass.dateAndTimeChoiceList(textView, "D").get(0)
+                    , UtilClass.dateAndTimeChoiceList(textView, "D").get(1)-1, UtilClass.dateAndTimeChoiceList(textView, "D").get(2));
             dialog.show();
         }
 
@@ -242,78 +319,62 @@ public class CheckFragment extends Fragment {
         }
     };
 
-
-    @OnClick(R.id.top_search)
-    public void getSearch() {
-        if(layout.getVisibility()==View.GONE){
-            layout.setVisibility(View.VISIBLE);
-            layout.setFocusable(true);
-        }else{
-            layout.setVisibility(View.GONE);
-        }
-    }
-
     //해당 검색값 데이터 조회
     @OnClick(R.id.imageView1)
     public void onSearchColumn() {
-        //검색하면 키보드 내리기
-//        InputMethodManager imm= (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//        imm.hideSoftInputFromWindow(et_search.getWindowToken(), 0);
-//
-//        if(et_search.getText().toString().length()==0){
-//            Toast.makeText(getActivity(), "검색어를 입력하세요.", Toast.LENGTH_SHORT).show();
-//        }else{
-//            async_progress_dialog("getPersonnelList");
-//        }
         async_progress_dialog();
 
     }
 
-    @OnClick(R.id.top_home)
-    public void goHome() {
-        UtilClass.goHome(getActivity());
-    }
-
-    @OnClick(R.id.top_write)
     public void getWriteBoard() {
         Fragment frag = new CheckWriteFragment();
         Bundle bundle = new Bundle();
 
+        bundle.putString("title",title+"작성");
         bundle.putString("mode","insert");
-        bundle.putString("scheck_date", tv_button1.getText().toString());
-        bundle.putString("echeck_date", tv_button2.getText().toString());
+        bundle.putString("gubun", gubun);
         frag.setArguments(bundle);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentReplace, frag);
-        fragmentTransaction.addToBackStack("점검관리작성");
+        fragmentTransaction.add(R.id.fragmentReplace, frag);
+        fragmentTransaction.addToBackStack(title+"작성");
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.commit();
     }
 
-    //ListView의 item (상세)
-    private class ListViewItemClickListener implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Fragment frag = null;
-            Bundle bundle = new Bundle();
+    @Override
+    public void onCardClick(int position) {
+        Fragment frag = null;
+        Bundle bundle = new Bundle();
 
-            FragmentManager fm = getFragmentManager();
-            FragmentTransaction fragmentTransaction = fm.beginTransaction();
-            fragmentTransaction.replace(R.id.fragmentReplace, frag = new CheckWriteFragment());
-            bundle.putString("title","점검관리상세");
-            String key= arrayList.get(position).get("key").toString();
-            String check_date= arrayList.get(position).get("data1").toString();
-            bundle.putString("chk_no", key);
-            bundle.putString("check_date", check_date);
-            bundle.putString("mode", "update");
-            bundle.putString("scheck_date", tv_button1.getText().toString());
-            bundle.putString("echeck_date", tv_button2.getText().toString());
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.add(R.id.fragmentReplace, frag = new CheckWriteFragment());
+        bundle.putString("title",title+"상세");
+        String key= arrayList.get(position).get("key").toString();
+        String check_date= arrayList.get(position).get("data2").toString();
+        bundle.putString("chk_no", key);
+        bundle.putString("check_date", check_date);
+        bundle.putString("mode", "update");
 
-            frag.setArguments(bundle);
-            fragmentTransaction.addToBackStack("점검관리상세");
-            fragmentTransaction.commit();
-        }
+        frag.setArguments(bundle);
+        fragmentTransaction.addToBackStack(title+"상세");
+        fragmentTransaction.commit();
+    }
+
+
+    @Override
+    public void onRefresh() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        mRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                async_progress_dialog();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        },500);
+
     }
 
     /************************************
@@ -332,4 +393,5 @@ public class CheckFragment extends Fragment {
             nfcAdapter.disableForegroundDispatch(getActivity());
         }
     }
+
 }

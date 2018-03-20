@@ -44,8 +44,6 @@ import com.green.powell.app.util.KeyValueArrayAdapter;
 import com.green.powell.app.util.UtilClass;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,8 +56,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CheckWriteFragment extends Fragment {
-    private final String TAG = "CheckWriteFragment";
+    private final String TAG = this.getClass().getSimpleName();
     private String userId="";
+    private String gubun;
     private ProgressDialog pDlalog = null;
 
     private AnyExpandableAdapter mMenuAdapter;
@@ -73,34 +72,24 @@ public class CheckWriteFragment extends Fragment {
     @Bind(R.id.date_button) TextView tvData1;
     @Bind(R.id.stime_button) TextView tvData2;
     @Bind(R.id.etime_button) TextView tvData3;
-    @Bind(R.id.spinner1) Spinner spn_usePart1;
+    @Bind(R.id.spinner1) Spinner spn_eGroup;
     @Bind(R.id.spinner2) Spinner spn_equip;
     @Bind(R.id.listView1) AnimatedExpandableListView expandableList;
     @Bind(R.id.linear2) LinearLayout deleteButton;
 
-    private String[] usePart1KeyList;
-    private String[] usePart1ValueList;
-    String selectUsePart1Key="";
-    private String[] usePart2KeyList;
-    private String[] usePart2ValueList;
-    String selectUsePart2Key="";
+    private String[] equipGroupKeyList;
+    private String[] equipGroupValueList;
+    String selectEquipGroupKey ="";
     private String[] equipKeyList;
     private String[] equipValueList;
-    String selectequipKey="";
+    String selectEquipKey ="";
 
     private String selectedPostionKey;  //스피너 선택된 키값
     private int selectedPostion=0;    //스피너 선택된 Row 값
     private String selectedPostionKey2;
     private int selectedPostion2=0;
-    private String selectedPostionKey3;
-    private int selectedPostion3=0;
-
-    private String selectUsePart2NM;
-    private String selectEquipNM;
 
     private String mode="";
-    private String scheck_date="";
-    private String echeck_date="";
     private String key_check_date ="";
     private String cu_check_date ="";
     private String chk_no="";
@@ -108,11 +97,6 @@ public class CheckWriteFragment extends Fragment {
     private boolean isCheckD= false;
     private boolean isTime=false;
 
-    //수정 데이터
-    private String modifyDate;
-    private String modifysTime="";
-    private String modifyeTime="";
-    private boolean approvalCheck= false;
 
     private List<ExpandedMenuModel> listDataHeader;
     private ExpandedMenuModel item;
@@ -127,6 +111,9 @@ public class CheckWriteFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mode= getArguments().getString("mode");
+        gubun= getArguments().getString("gubun");
         setHasOptionsMenu(true);
     }
 
@@ -134,10 +121,6 @@ public class CheckWriteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.check_write, container, false);
         ButterKnife.bind(this, view);
-
-        mode= getArguments().getString("mode");
-        scheck_date= getArguments().getString("scheck_date");
-        echeck_date= getArguments().getString("echeck_date");
 
         UtilClass.setToolbar(getActivity(), getArguments().getString("title"));
 
@@ -151,19 +134,17 @@ public class CheckWriteFragment extends Fragment {
         if(mode.equals("insert")){
             view.findViewById(R.id.linear2).setVisibility(View.GONE);
             userId= MainActivity.loginUserId;
-//            textTitle.setText("점검관리작성");
             key_check_date= " ";
             chk_no=" ";
 
             if(getArguments().getString("TAG_ID")!=null){   //NFC 태그 모드
-                selectedPostionKey= getArguments().getString("use_part1");
-                selectedPostionKey2= getArguments().getString("use_part2");
-                selectedPostionKey3= getArguments().getString("equip_no");
+                selectedPostionKey= getArguments().getString("egroup_no");
+                selectedPostionKey2= getArguments().getString("equip_no");
                 UtilClass.logD(TAG, "들어옴?1=" + selectedPostionKey);
                 UtilClass.logD(TAG, "들어옴?2=" + selectedPostionKey2);
-                UtilClass.logD(TAG, "들어옴?3=" + selectedPostionKey3);
             }
-            getUsePart1Data();
+
+            getEquipGroupData();
 
             tvData1.setText(UtilClass.getCurrentDate(1));
             tvData2.setText(UtilClass.getCurrentDate(3));
@@ -171,34 +152,20 @@ public class CheckWriteFragment extends Fragment {
 
         }else if(mode.equals("update")){
             isCheckD= true;
-//            textTitle.setText("점검관리수정");
             key_check_date = getArguments().getString("check_date");
             chk_no= getArguments().getString("chk_no");
+
             async_progress_dialog("getCheckMInfo");
 
         }else{
 
         }
 
-//        spn_usePart1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                KeyValueArrayAdapter adapter = (KeyValueArrayAdapter) parent.getAdapter();
-//                selectUsePart1Key= adapter.getEntryValue(position);
-//                UtilClass.logD("LOG", "KEY : " + adapter.getEntryValue(position));
-//                UtilClass.logD("LOG", "VALUE : " + adapter.getEntry(position));
-//                getUsePart2Data();
-//            }
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//            }
-//        });
-        spn_usePart1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spn_eGroup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 KeyValueArrayAdapter adapter = (KeyValueArrayAdapter) parent.getAdapter();
-                selectUsePart2Key= adapter.getEntryValue(position);
-                selectUsePart2NM= adapter.getEntry(position);
+                selectEquipGroupKey = adapter.getEntryValue(position);
 
                 UtilClass.logD("LOG", "KEY : " + adapter.getEntryValue(position));
                 UtilClass.logD("LOG", "VALUE : " + adapter.getEntry(position));
@@ -212,8 +179,7 @@ public class CheckWriteFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 KeyValueArrayAdapter adapter = (KeyValueArrayAdapter) parent.getAdapter();
-                selectequipKey= adapter.getEntryValue(position);
-                selectEquipNM= adapter.getEntry(position);
+                selectEquipKey = adapter.getEntryValue(position);
 
                 UtilClass.logD("LOG", "KEY : " + adapter.getEntryValue(position));
                 UtilClass.logD("LOG", "VALUE : " + adapter.getEntry(position));
@@ -336,33 +302,24 @@ public class CheckWriteFragment extends Fragment {
                         UtilClass.logD(TAG, "isSuccessful="+response.body().toString());
                         String status= response.body().getStatus();
                         try {
-                            getUsePart1Data();
+                            getEquipGroupData();
 
                             userId= response.body().getList().get(0).get("USER_ID").toString();
                             if(MainActivity.loginUserId.equals(userId)){
                             }else{
 //                                getActivity().findViewById(R.id.layout_bottom).setVisibility(View.GONE);
                             }
-                            selectedPostionKey = response.body().getList().get(0).get("USE_PART1").toString();
-                            selectedPostionKey2 = response.body().getList().get(0).get("USE_PART2").toString();
-                            selectedPostionKey3 = response.body().getList().get(0).get("EQUIP_NO").toString();
+                            selectedPostionKey = response.body().getList().get(0).get("EGROUP_NO").toString();
+                            selectedPostionKey2 = response.body().getList().get(0).get("EQUIP_NO").toString();
+                            gubun = response.body().getList().get(0).get("PC_TYPE");
+
                             tvData1.setText(response.body().getList().get(0).get("CHECK_DATE").toString());
                             tvData2.setText(response.body().getList().get(0).get("CHK_STIME").toString());
                             tvData3.setText(response.body().getList().get(0).get("CHK_ETIME").toString());
 
-                            //점검승인 데이터
-                            if(response.body().getList().get(0).get("FIRST_STATE")!=null){
-                                approvalCheck= true;
-                            }else{
-                                approvalCheck= false;
-                            }
-
-                            modifyDate= tvData1.getText().toString();
-                            modifysTime= tvData2.getText().toString();
-                            modifyeTime= tvData3.getText().toString();
                         } catch ( Exception e ) {
                             e.printStackTrace();
-                            Toast.makeText(getActivity(), "에러코드 CheckWrite 5", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "에러코드 CheckWrite 3", Toast.LENGTH_SHORT).show();
                         }
                     }else{
                         Toast.makeText(getActivity(), "response isFailed", Toast.LENGTH_SHORT).show();
@@ -383,8 +340,8 @@ public class CheckWriteFragment extends Fragment {
         }
     }
 
-    public void getUsePart1Data() {
-        Call<Datas> call = service.listData("Check","usePart1List");
+    public void getEquipGroupData() {
+        Call<Datas> call = service.listData("Equipment","equipGroupList");
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -397,26 +354,24 @@ public class CheckWriteFragment extends Fragment {
                         if(response.body().getCount()==0){
                             Toast.makeText(getActivity(), "데이터가 없습니다.", Toast.LENGTH_SHORT).show();
                         }
-                        usePart1KeyList = new String[response.body().getList().size()];
-                        usePart1ValueList = new String[response.body().getList().size()];
+                        equipGroupKeyList = new String[response.body().getList().size()];
+                        equipGroupValueList = new String[response.body().getList().size()];
                         for(int i=0; i<response.body().getList().size();i++){
-                            usePart1KeyList[i]= response.body().getList().get(i).get("CHILD_CD").toString();
-                            if(usePart1KeyList[i].equals(selectedPostionKey))  selectedPostion= i;
-                            usePart1ValueList[i]= response.body().getList().get(i).get("CHILD_NM").toString();
+                            equipGroupKeyList[i]= response.body().getList().get(i).get("EGROUP_NO").toString();
+                            if(equipGroupKeyList[i].equals(selectedPostionKey))  selectedPostion= i;
+                            equipGroupValueList[i]= response.body().getList().get(i).get("EGROUP_NM").toString();
                         }
-
                         KeyValueArrayAdapter adapter = new KeyValueArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        adapter.setEntries(usePart1ValueList);
-                        adapter.setEntryValues(usePart1KeyList);
+                        adapter.setEntries(equipGroupValueList);
+                        adapter.setEntryValues(equipGroupKeyList);
 
-                        spn_usePart1.setPrompt("사업장");
-                        spn_usePart1.setAdapter(adapter);
-                        spn_usePart1.setSelection(selectedPostion);
-
+                        spn_eGroup.setPrompt("사용공정");
+                        spn_eGroup.setAdapter(adapter);
+                        spn_eGroup.setSelection(selectedPostion);
                     } catch ( Exception e ) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity(), "에러코드 CheckWrite 3", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "에러코드 CheckWrite 1", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     Toast.makeText(getActivity(), "response isFailed", Toast.LENGTH_SHORT).show();
@@ -428,61 +383,13 @@ public class CheckWriteFragment extends Fragment {
             public void onFailure(Call<Datas> call, Throwable t) {
                 if(pDlalog!=null) pDlalog.dismiss();
                 UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
-                Toast.makeText(getActivity(), "onFailure Equipment",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "onFailure CheckWrite",Toast.LENGTH_SHORT).show();
             }
         });
     }
-//
-//    public void getUsePart2Data() {
-//        Call<Datas> call = service.listData("Check","usePart2List", "parent_cd", selectUsePart1Key);
-//        call.enqueue(new Callback<Datas>() {
-//            @Override
-//            public void onResponse(Call<Datas> call, Response<Datas> response) {
-//                UtilClass.logD(TAG, "response="+response);
-//                if (response.isSuccessful()) {
-//                    UtilClass.logD(TAG, "isSuccessful="+response.body().toString());
-//                    String status= response.body().getStatus();
-//
-//                    try {
-//                        if(response.body().getCount()==0){
-//                            Toast.makeText(getActivity(), "데이터가 없습니다.", Toast.LENGTH_SHORT).show();
-//                        }
-//                        usePart2KeyList = new String[response.body().getList().size()];
-//                        usePart2ValueList = new String[response.body().getList().size()];
-//                        for(int i=0; i<response.body().getList().size();i++){
-//                            usePart2KeyList[i]= response.body().getList().get(i).get("CHILD_CD").toString();
-//                            if(usePart2KeyList[i].equals(selectedPostionKey2))  selectedPostion2= i;
-//                            usePart2ValueList[i]= response.body().getList().get(i).get("CHILD_NM").toString();
-//                        }
-//                        KeyValueArrayAdapter adapter = new KeyValueArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item);
-//                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                        adapter.setEntries(usePart2ValueList);
-//                        adapter.setEntryValues(usePart2KeyList);
-//
-//                        spn_usePart2.setPrompt("사용공정");
-//                        spn_usePart2.setAdapter(adapter);
-//                        spn_usePart2.setSelection(selectedPostion2);
-//                    } catch ( Exception e ) {
-//                        e.printStackTrace();
-//                        Toast.makeText(getActivity(), "에러코드 CheckWrite 4", Toast.LENGTH_SHORT).show();
-//                    }
-//                }else{
-//                    Toast.makeText(getActivity(), "response isFailed", Toast.LENGTH_SHORT).show();
-//                }
-//                if(pDlalog!=null) pDlalog.dismiss();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Datas> call, Throwable t) {
-//                if(pDlalog!=null) pDlalog.dismiss();
-//                UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
-//                Toast.makeText(getActivity(), "onFailure Equipment",Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
 
     public void getEquipData() {
-        Call<Datas> call = service.listData("Check","equipList", "use_part", selectUsePart1Key, selectUsePart2Key);
+        Call<Datas> call = service.listData("Equipment","equipmentList", selectEquipGroupKey);
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -499,7 +406,7 @@ public class CheckWriteFragment extends Fragment {
                         equipValueList = new String[response.body().getList().size()];
                         for(int i=0; i<response.body().getList().size();i++){
                             equipKeyList[i]= response.body().getList().get(i).get("EQUIP_NO").toString();
-                            if(equipKeyList[i].equals(selectedPostionKey3))  selectedPostion3= i;
+                            if(equipKeyList[i].equals(selectedPostionKey2))  selectedPostion2= i;
                             equipValueList[i]= response.body().getList().get(i).get("EQUIP_NM").toString();
                         }
 
@@ -510,11 +417,11 @@ public class CheckWriteFragment extends Fragment {
 
                         spn_equip.setPrompt("장치");
                         spn_equip.setAdapter(adapter);
-                        spn_equip.setSelection(selectedPostion3);
+                        spn_equip.setSelection(selectedPostion2);
 
                     } catch ( Exception e ) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity(), "에러코드 CheckWrite 3", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "에러코드 CheckWrite 2", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     Toast.makeText(getActivity(), "response isFailed", Toast.LENGTH_SHORT).show();
@@ -526,7 +433,7 @@ public class CheckWriteFragment extends Fragment {
             public void onFailure(Call<Datas> call, Throwable t) {
                 if(pDlalog!=null) pDlalog.dismiss();
                 UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
-                Toast.makeText(getActivity(), "onFailure Equipment",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "onFailure CheckWrite",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -535,7 +442,7 @@ public class CheckWriteFragment extends Fragment {
         pDlalog = new ProgressDialog(getActivity());
         UtilClass.showProcessingDialog(pDlalog);
 
-        Call<Datas> call = service.listData("Check","checkDInfoList", "checkInfo="+selectequipKey, key_check_date, chk_no);
+        Call<Datas> call = service.listData("Check","checkDInfoList", "checkInfo="+ selectEquipKey, key_check_date, chk_no);
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -581,7 +488,7 @@ public class CheckWriteFragment extends Fragment {
                         expandableList.setAdapter(mMenuAdapter);
                     } catch ( Exception e ) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity(), "에러코드 CheckWrite 2", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "에러코드 CheckWrite 4", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     Toast.makeText(getActivity(), "response isFailed", Toast.LENGTH_SHORT).show();
@@ -593,7 +500,7 @@ public class CheckWriteFragment extends Fragment {
             public void onFailure(Call<Datas> call, Throwable t) {
                 if(pDlalog!=null) pDlalog.dismiss();
                 UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
-                Toast.makeText(getActivity(), "onFailure Equipment",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "onFailure CheckWrite",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -617,39 +524,24 @@ public class CheckWriteFragment extends Fragment {
     }
 
     public void getDialog(String gubun) {
-        int year, month, day, hour, minute;
+        TextView textView;
 
-        GregorianCalendar calendar = new GregorianCalendar();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day= calendar.get(Calendar.DAY_OF_MONTH);
-        hour = calendar.get(Calendar.HOUR_OF_DAY);
-        minute = calendar.get(Calendar.MINUTE);
+        if(gubun.equals("D")){
+            textView= tvData1;
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, UtilClass.dateAndTimeChoiceList(textView, "D").get(0)
+                    , UtilClass.dateAndTimeChoiceList(textView, "D").get(1)-1, UtilClass.dateAndTimeChoiceList(textView, "D").get(2));
+            dialog.show();
 
-        if(mode.equals("insert")){
-            if(gubun.equals("D")){
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, year, month, day);
-                dialog.show();
-            }else{
-                TimePickerDialog dialog = new TimePickerDialog(getActivity(), time_listener, hour, minute, false);
-                dialog.show();
-            }
+        }else if(gubun.equals("ST")){
+            textView= tvData2;
+            TimePickerDialog dialog = new TimePickerDialog(getActivity(), time_listener, UtilClass.dateAndTimeChoiceList(textView, "T").get(0)
+                    , UtilClass.dateAndTimeChoiceList(textView, "T").get(1), false);
+            dialog.show();
         }else{
-            String[] dateArr = modifyDate.split("[.]");
-            String[] sTimeArr = modifysTime.split(":");
-            String[] eTimeArr = modifyeTime.split(":");
-
-            if(gubun.equals("D")){
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, Integer.parseInt(dateArr[0]),
-                        Integer.parseInt(dateArr[1])-1, Integer.parseInt(dateArr[2]));
-                dialog.show();
-            }else if(gubun.equals("ST")){
-                TimePickerDialog dialog = new TimePickerDialog(getActivity(), time_listener, Integer.parseInt(sTimeArr[0]), Integer.parseInt(sTimeArr[1]), false);
-                dialog.show();
-            }else{
-                TimePickerDialog dialog = new TimePickerDialog(getActivity(), time_listener, Integer.parseInt(eTimeArr[0]), Integer.parseInt(eTimeArr[1]), false);
-                dialog.show();
-            }
+            textView= tvData3;
+            TimePickerDialog dialog = new TimePickerDialog(getActivity(), time_listener, UtilClass.dateAndTimeChoiceList(textView, "T").get(0)
+                    , UtilClass.dateAndTimeChoiceList(textView, "T").get(1), false);
+            dialog.show();
         }
 
     }
@@ -669,7 +561,6 @@ public class CheckWriteFragment extends Fragment {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // 설정버튼 눌렀을 때
-            Toast.makeText(getActivity(), hourOfDay + "시 " + minute + "분", Toast.LENGTH_SHORT).show();
             String hour= UtilClass.addZero(hourOfDay);
             String min= UtilClass.addZero(minute);
             if(isTime){
@@ -697,11 +588,8 @@ public class CheckWriteFragment extends Fragment {
     @OnClick({R.id.textButton2})
     public void alertDialogDelete(){
         if(MainActivity.loginUserId.equals(userId)){
-            if(approvalCheck){
-                Toast.makeText(getActivity(),"해당 점검승인 데이터가 존재 합니다.", Toast.LENGTH_SHORT).show();
-            }else{
-                alertDialog("D");
-            }
+            alertDialog("D");
+
         }else{
             Toast.makeText(getActivity(),"작성자만 가능합니다.", Toast.LENGTH_SHORT).show();
         }
@@ -726,7 +614,7 @@ public class CheckWriteFragment extends Fragment {
                 }else if(gubun.equals("D")){
                     deleteData();
                 }else{
-                    onPushData();
+
                 }
             }
         });
@@ -773,20 +661,17 @@ public class CheckWriteFragment extends Fragment {
         String check_date = tvData1.getText().toString();
         String chk_stime = tvData2.getText().toString();
         String chk_etime = tvData3.getText().toString();
-        String use_part1 = selectUsePart1Key;
-        String use_part2 = selectUsePart2Key;
-        String equip_no = selectequipKey;
+        String eGroup_no = selectEquipGroupKey;
+        String equip_no = selectEquipKey;
 
         Map<String, Object> map = new HashMap();
         map.put("loginUserId",MainActivity.loginUserId);
         map.put("check_date",check_date);
         map.put("chk_stime",chk_stime);
         map.put("chk_etime",chk_etime);
-        map.put("use_part1",use_part1);
-        map.put("use_part2",use_part2);
+        map.put("eGroup_no",eGroup_no);
         map.put("equip_no",equip_no);
-        map.put("use_part2_nm",selectUsePart2NM);
-        map.put("equip_nm",selectEquipNM);
+        map.put("pc_type",gubun);
 
         map.put("list_size", mListDataHeader.size());
         for(int i=0; i< mListDataHeader.size();i++){
@@ -811,7 +696,8 @@ public class CheckWriteFragment extends Fragment {
             call = service.updateData("Check","checkInfo", map);
             map.put("key_check_date",key_check_date);
             map.put("key_chk_no",chk_no);
-            map.put("cu_equip_no",selectedPostionKey3);
+            map.put("cu_eGroup_no",selectedPostionKey);
+            map.put("cu_equip_no",selectedPostionKey2);
         }
 
         call.enqueue(new Callback<Datas>() {
@@ -837,38 +723,6 @@ public class CheckWriteFragment extends Fragment {
 
     }
 
-    //푸시 전송
-    public void onPushData() {
-        Map<String, Object> map = new HashMap();
-        map.put("writer_sabun",MainActivity.loginUserId);
-        map.put("writer_name",MainActivity.loginName);
-
-        pDlalog = new ProgressDialog(getActivity());
-        UtilClass.showProcessingDialog(pDlalog);
-
-        Call<Datas> call = service.sendData("Board","sendPushData",map);
-        call.enqueue(new Callback<Datas>() {
-            @Override
-            public void onResponse(Call<Datas> call, Response<Datas> response) {
-                if (response.isSuccessful()) {
-                    UtilClass.logD(TAG, "isSuccessful="+response.body().toString());
-                    handleResponse(response);
-                }else{
-                    Toast.makeText(getActivity(), "작업에 실패하였습니다.",Toast.LENGTH_LONG).show();
-                }
-                if(pDlalog!=null) pDlalog.dismiss();
-            }
-
-            @Override
-            public void onFailure(Call<Datas> call, Throwable t) {
-                if(pDlalog!=null) pDlalog.dismiss();
-                UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
-                Toast.makeText(getActivity(), "handleResponse Push",Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
-
     //작성 완료
     public void handleResponse(Response<Datas> response) {
         UtilClass.logD(TAG,"response="+response);
@@ -876,7 +730,7 @@ public class CheckWriteFragment extends Fragment {
             String status= response.body().getStatus();
             if(status.equals("success")){
                 Intent intent = new Intent(getActivity(),FragMenuActivity.class);
-                intent.putExtra("title", "점검관리");
+                intent.putExtra("title", "정기점검");
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }else if(status.equals("successOnPush")){

@@ -1,244 +1,163 @@
 package com.green.powell.app.adaptor;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.green.powell.app.R;
+import com.green.powell.app.util.UtilClass;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder> {
+    private final String TAG = this.getClass().getSimpleName();
 
-public class CheckAdapter extends BaseAdapter  implements View.OnClickListener{
+    private int resource;
+    private ArrayList<HashMap<String,String>> boardList;
+    private Context con;
+    private String name;
 
-	private final String TAG = this.getClass().getSimpleName();
-	private LayoutInflater inflater;
-	private ArrayList<HashMap<String,String>> boardList;
-	private ViewHolder viewHolder;
-	private Context con;
-	private String name;
+    private CardViewClickListener clickListener;
 
-	public interface ListBtnClickListener {
-		void onCheckApprovalBtn(int position, int type) ;
+    public interface CardViewClickListener {
+        void onCardClick(int position) ;
 
-	}
+    }
 
-	private ListBtnClickListener listBtnClickListener ;
+    public CheckAdapter(Context con , ArrayList<HashMap<String,String>> array, String name){
+        this.con= con;
+        boardList = array;
+        this.name = name;
+    }
 
-	public CheckAdapter(Context con , ArrayList<HashMap<String,String>> array, String name){
-		inflater = LayoutInflater.from(con);
-		boardList = array;
-		this.con = con;
-		this.name = name;
-	}
+    public CheckAdapter(Context con , int resource, ArrayList<HashMap<String,String>> array, String name){
+        this.con= con;
+        this.resource = resource;
+        boardList = array;
+        this.name = name;
+    }
 
-	public CheckAdapter(Context con , ArrayList<HashMap<String,String>> array, String name, ListBtnClickListener clickListener){
-		inflater = LayoutInflater.from(con);
-		boardList = array;
-		this.con = con;
-		this.name = name;
-		this.listBtnClickListener = clickListener ;
-	}
+    public CheckAdapter(Context con , int resource, ArrayList<HashMap<String,String>> array, String name, CardViewClickListener clickListener){
+        this.con= con;
+        this.resource = resource;
+        boardList = array;
+        this.name = name;
+        this.clickListener = clickListener;
+    }
 
-	@Override
-	public int getCount() {
-		return boardList.size();
-	}
+    /**
+     * 특정 아이템의 변경사항을 적용하기 위해 기본 아이템을 새로운 아이템으로 변경한다.
+     * @param boardList 새로운 아이템
+     */
+    public void setItem(ArrayList<HashMap<String,String>> boardList) {
+        boardList.get(0);
+    }
 
-	@Override
-	public Object getItem(int arg0) {
-		return null;
-	}
+    /**
+     * 현재 아이템 리스트에 새로운 아이템 리스트를 추가한다.
+     * @param boardList 새로운 아이템 리스트
+     */
+    public void addItemList(ArrayList<HashMap<String,String>> boardList) {
+        this.boardList.addAll(boardList);
+        notifyDataSetChanged();
+    }
 
-	@Override
-	public long getItemId(int arg0) {
-		return 0;
-	}
 
-	@Override
-	public View getView(final int position, final View convertview, ViewGroup parent) {
-		View v = convertview;
+    /**
+     * 아이템 크기를 반환한다.
+     * @return 아이템 크기
+     */
+    @Override
+    public int getItemCount() {
+        return this.boardList.size();
+    }
 
-		if(v == null){
-			viewHolder = new ViewHolder();
+    /**
+     * 뷰홀더(ViewHolder)를 생성하기 위해 자동으로 호출된다.
+     * @param parent 부모 뷰그룹
+     * @param viewType 새로운 뷰의 뷰타입
+     * @return 뷰홀더 객체
+     */
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
 
-			if(name.equals("Check")){
-				v = inflater.inflate(R.layout.check_list_item, parent,false);
-				viewHolder.board_data1 = (TextView)v.findViewById(R.id.textView1);
-				viewHolder.board_data2 = (TextView)v.findViewById(R.id.textView2);
-				viewHolder.board_data3 = (TextView)v.findViewById(R.id.textView3);
-				viewHolder.board_data4 = (TextView)v.findViewById(R.id.textView4);
-				viewHolder.board_data5 = (TextView)v.findViewById(R.id.textView5);
-				viewHolder.board_data6 = (TextView)v.findViewById(R.id.textView6);
+        return new ViewHolder(v);
+    }
 
-			}else if(name.equals("UnCheck")){
-				v = inflater.inflate(R.layout.umcheck_list_item, parent,false);
-				viewHolder.board_data1 = (TextView)v.findViewById(R.id.textView1);
-				viewHolder.board_data2 = (TextView)v.findViewById(R.id.textView2);
-				viewHolder.board_data3 = (TextView)v.findViewById(R.id.textView3);
-				viewHolder.board_data4 = (TextView)v.findViewById(R.id.textView4);
+    /**
+     * 뷰홀더(ViewHolder)와 아이템을 리스트 위치에 따라 연동한다.
+     * @param holder 뷰홀더 객체
+     * @param pos 리스트 위치
+     */
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int pos) {
+        final int position= pos;
+        holder.board_data1.setText(boardList.get(position).get("data1").toString());
+        holder.board_data2.setText(boardList.get(position).get("data2").toString());
+        holder.board_data3.setText(boardList.get(position).get("data3").toString());
 
-			}else{
-				v = inflater.inflate(R.layout.check_list_item01, parent,false);
-				viewHolder.board_data1 = (TextView)v.findViewById(R.id.textView1);
-				viewHolder.board_data2 = (TextView)v.findViewById(R.id.textView2);
-				viewHolder.board_data3 = (TextView)v.findViewById(R.id.textView3);
-				viewHolder.board_data4 = (TextView)v.findViewById(R.id.textView4);
-				viewHolder.board_data5 = (TextView)v.findViewById(R.id.textView5);
-				viewHolder.button1 = (Button) v.findViewById(R.id.button1);
-				viewHolder.button2 = (Button) v.findViewById(R.id.button2);
+        String checkState= boardList.get(position).get("data4").toString();
+        if(checkState.equals("1")){
+            holder.board_data4.setText("양호");
+            holder.board_data4.setBackgroundResource(R.drawable.box_green);
+        }else if(checkState.equals("2")){
+            holder.board_data4.setText("고장");
+            holder.board_data4.setBackgroundResource(R.drawable.box_red);
+        }else {
+            holder.board_data4.setText("");
+            holder.board_data4.setBackgroundResource(R.drawable.box_red);
+        }
 
-				viewHolder.button1.setTag(position);
-				viewHolder.button1.setOnClickListener(this);
-				viewHolder.button1.setFocusable(false);
+        holder.board_data4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UtilClass.logD(TAG, "들어옴");
+            }
+        });
 
-				viewHolder.button2.setTag(position);
-				viewHolder.button2.setOnClickListener(this);
-				viewHolder.button2.setFocusable(false);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clickListener != null) {
+                    clickListener.onCardClick(position);
 
-			}
+                }
+            }
+        });
 
-			v.setTag(viewHolder);
+    }
 
-		}else {
-			viewHolder = (ViewHolder)v.getTag();
-		}
-		if(name.equals("Check")){
-			viewHolder.board_data1.setText(boardList.get(position).get("data1").toString());
-			viewHolder.board_data2.setText(boardList.get(position).get("data2").toString());
-			viewHolder.board_data3.setText(boardList.get(position).get("data3").toString());
-			viewHolder.board_data4.setText(boardList.get(position).get("data4").toString());
-			viewHolder.board_data5.setText(boardList.get(position).get("data5").toString());
-			viewHolder.board_data6.setText(boardList.get(position).get("data6").toString());
 
-			String checkState= boardList.get(position).get("data6").toString();
-			if(checkState.equals("1")){
-				viewHolder.board_data6.setText("양호");
-				viewHolder.board_data6.setBackgroundResource(R.drawable.box_green);
-			}else if(checkState.equals("2")){
-				viewHolder.board_data6.setText("검토");
-				viewHolder.board_data6.setBackgroundResource(R.drawable.box_yellow);
-			}else if(checkState.equals("3")){
-				viewHolder.board_data6.setText("즉시");
-				viewHolder.board_data6.setBackgroundResource(R.drawable.box_blue);
-			}else {
-				viewHolder.board_data6.setText("긴급");
-				viewHolder.board_data6.setBackgroundResource(R.drawable.box_red);
-			}
+    /**
+     * 아이템을 보여주기 위한 뷰홀더 클래스
+     */
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-		}else if(name.equals("UnCheck")){
-			String type_kor= boardList.get(position).get("data5").toString();
-			viewHolder.board_data1.setText(boardList.get(position).get("data1").toString());
-			viewHolder.board_data2.setText(boardList.get(position).get("data2").toString());
-			viewHolder.board_data3.setText(boardList.get(position).get("data3")+type_kor);
-			viewHolder.board_data4.setText(boardList.get(position).get("data4")+type_kor);
+        TextView board_data1;
+        TextView board_data2;
+        TextView board_data3;
+        TextView board_data4;
+        TextView board_data5;
+        TextView board_data6;
+        Button button1;
+        Button button2;
 
-		}else{
-			viewHolder.board_data1.setText(boardList.get(position).get("data1").toString());
-			viewHolder.board_data2.setText(boardList.get(position).get("data2").toString());
-			viewHolder.board_data3.setText(boardList.get(position).get("data3").toString());
-			viewHolder.board_data4.setText(boardList.get(position).get("data4").toString());
-			viewHolder.board_data5.setText(boardList.get(position).get("data5").toString());
+        public ViewHolder(View v) {
+            super(v);
 
-			viewHolder.button1.setTag(position);
-			viewHolder.button1.setOnClickListener(this);
-			viewHolder.button1.setFocusable(false);
+            board_data1 = (TextView)v.findViewById(R.id.textView1);
+            board_data2 = (TextView)v.findViewById(R.id.textView2);
+            board_data3 = (TextView)v.findViewById(R.id.textView3);
+            board_data4 = (TextView)v.findViewById(R.id.textView4);
 
-			viewHolder.button2.setTag(position);
-			viewHolder.button2.setOnClickListener(this);
-			viewHolder.button2.setFocusable(false);
-
-			String checkState= boardList.get(position).get("data3").toString();
-			if(checkState.equals("1")){
-				viewHolder.board_data3.setText("양호");
-				viewHolder.board_data3.setBackgroundResource(R.drawable.box_green);
-			}else if(checkState.equals("2")){
-				viewHolder.board_data3.setText("검토");
-				viewHolder.board_data3.setBackgroundResource(R.drawable.box_yellow);
-			}else if(checkState.equals("3")){
-				viewHolder.board_data3.setText("즉시");
-				viewHolder.board_data3.setBackgroundResource(R.drawable.box_blue);
-			}else{
-				viewHolder.board_data3.setText("긴급");
-				viewHolder.board_data3.setBackgroundResource(R.drawable.box_red);
-		}
-
-			String firstState= boardList.get(position).get("data6").toString();
-			if(firstState.equals("2")){
-				viewHolder.button1.setText("승인");
-				viewHolder.button1.setBackgroundResource(R.drawable.box_green);
-			}else if(firstState.equals("3")){
-				viewHolder.button1.setText("반려");
-				viewHolder.button1.setBackgroundResource(R.drawable.box_red);
-			}else{
-				viewHolder.button1.setText("1차");
-				viewHolder.button1.setBackgroundResource(R.drawable.box_gray);
-			}
-			String secondState= boardList.get(position).get("data7").toString();
-			if(secondState.equals("2")){
-				viewHolder.button2.setText("승인");
-				viewHolder.button2.setBackgroundResource(R.drawable.box_green);
-			}else if(secondState.equals("3")){
-				viewHolder.button2.setText("반려");
-				viewHolder.button2.setBackgroundResource(R.drawable.box_red);
-			}else{
-				viewHolder.button2.setText("2차");
-				viewHolder.button2.setBackgroundResource(R.drawable.box_gray);
-			}
-		}
-
-		return v;
-	}
-
-	@Override
-	public void onClick(View v) {
-		if (this.listBtnClickListener != null) {
-			int type=0;
-			if(v.getId() == R.id.button1){
-				type=1;
-			}else if(v.getId() == R.id.button2){
-				type=2;
-			}
-			int position= (int) v.getTag();
-			this.listBtnClickListener.onCheckApprovalBtn(position, type) ;
-
-		}
-	}
-
-	public void setArrayList(ArrayList<HashMap<String,String>> arrays){
-		this.boardList = arrays;
-	}
-	
-	public ArrayList<HashMap<String,String>> getArrayList(){
-		return boardList;
-	}
-	
-	
-	/*
-	 * ViewHolder
-	 */
-	class ViewHolder{
-		TextView board_data1;
-		TextView board_data2;
-		TextView board_data3;
-		TextView board_data4;
-		TextView board_data5;
-		TextView board_data6;
-		Button button1;
-		Button button2;
-	}
-	
-
+            button1 = (Button) v.findViewById(R.id.button1);
+            button2 = (Button) v.findViewById(R.id.button2);
+        }
+    }
 }
-
-
-
-
-
-
-

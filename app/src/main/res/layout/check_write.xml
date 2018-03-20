@@ -74,7 +74,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView1"
+                        android:id="@+id/text1"
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:ellipsize="end"
@@ -106,7 +106,7 @@
                     android:layout_height="42dp">
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/text2"
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:ellipsize="end"
@@ -152,11 +152,10 @@
                     <TextView
                         android:id="@+id/date_button"
                         android:layout_width="90dp"
-                        android:layout_height="34dp"
+                        android:layout_height="30dp"
                         android:layout_marginEnd="6dp"
                         android:background="@drawable/box_blueline"
                         android:gravity="center"
-                        android:text="2017.04.01"
                         android:textColor="@color/blue2"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -166,6 +165,7 @@
                         android:layout_width="45dp"
                         android:layout_height="30dp"
                         android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
                         android:layout_toStartOf="@+id/textView16"
                         android:background="@drawable/box_blueline"
                         android:gravity="center"
@@ -210,7 +210,7 @@
                     android:layout_height="42dp">
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/text"
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:ellipsize="end"
@@ -222,14 +222,13 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/textView1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:ellipsize="end"
                         android:gravity="center|left"
                         android:maxLines="1"
                         android:paddingLeft="5dp"
-                        android:text="홍길동"
                         android:textColor="@color/font_333"
                         android:textSize="14sp" />
                 </LinearLayout>

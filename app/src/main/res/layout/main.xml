@@ -11,52 +11,136 @@
     <!-- MAIN TOP -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="450dp"
         android:layout_weight="0.1"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingBottom="10dp"
-        android:paddingTop="15dp">
-
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="6dp"
+        >
+        <!-- main미점검 -->
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="110dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/main_ic_alam" />
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="174dp"
+            android:orientation="vertical"
+            android:background="@color/colorAccent"
+            android:paddingTop="6dp"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0"
-                android:textColor="@color/white"
-                android:textSize="120sp" />
+                android:orientation="horizontal"
+                android:layout_margin="10dp"
+                >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="건"
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center|right"
+                    android:text="12건"
+                    android:textColor="@color/colorAccent2"
+                    android:textSize="64sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/mainImage1"
+                    android:layout_width="0dp"
+                    android:layout_height="104dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.8"
+                    android:src="@drawable/ic_main01" />
+            </LinearLayout>
+            <Button
+                android:id="@id/button1"
+                android:layout_width="120dp"
+                android:layout_height="34dp"
+                android:layout_gravity="top|right"
+                android:background="@drawable/box_violet"
+                android:padding="2dp"
+                android:layout_marginRight="26dp"
+                android:text="미점검"
                 android:textColor="@color/white"
-                android:textSize="30sp" />
+                android:textSize="15sp"
+                android:textStyle="bold"
+                />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/main_img_alam"
-            android:padding="6dp"
-            android:text="미점검 리스트"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:id="@+id/textButton1" />
+        <!-- main이상 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:paddingBottom="6dp"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp"
+                >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center|right"
+                    android:layout_marginRight="10dp"
+                    android:text="2건"
+                    android:textSize="64sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/orange_dark"
+                    />
+
+                <ImageView
+                    android:id="@+id/mainImage2"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="0.8"
+                    android:src="@drawable/ic_main02" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="1dp"
+                >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginRight="10dp"
+                    android:text="제1설비시설 이상"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    />
+                <Button
+                    android:id="@id/button2"
+                    android:layout_width="120dp"
+                    android:layout_height="34dp"
+                    android:layout_gravity="top|right"
+                    android:background="@drawable/box_orange"
+                    android:padding="2dp"
+                    android:layout_marginRight="24dp"
+                    android:text="고장"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- 라인 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gary_dark"
+            />
 
     </LinearLayout>
 
@@ -66,9 +150,9 @@
         android:layout_height="match_parent"
         android:layout_weight="0.45"
         android:orientation="horizontal"
-        android:paddingTop="20dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         >
         <LinearLayout
             android:id="@+id/imageView1"
@@ -81,17 +165,22 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/main_ic_gear" />
+                android:src="@drawable/ic_main03" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="장치관리"
+                android:text=" 설비정보"
                 android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="bold" />
         </LinearLayout>
+        <!-- 라인: 세로 -->
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/gary_line_light"/>
 
         <LinearLayout
             android:id="@+id/imageView2"
@@ -105,41 +194,26 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/main_ic_map" />
+                android:src="@drawable/ic_main04" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="도면관리"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/imageView3"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/main_ic_msds" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="MSDS관리"
+                android:text="NFC태그"
                 android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
+    <!-- 라인 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gary_line_light"
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="6dp"
+        />
 
     <!--menu 2행-->
     <LinearLayout
@@ -148,78 +222,61 @@
         android:layout_weight="0.44"
         android:orientation="horizontal"
         android:paddingBottom="10dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         >
+
+        <LinearLayout
+            android:id="@+id/imageView3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_main05" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="일상점검"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <!-- 라인: 세로 -->
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/gary_line_light"/>
+
         <LinearLayout
             android:id="@+id/imageView4"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/main_ic_check" />
+                android:src="@drawable/ic_main06" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="점검관리"
+                android:text="정기점검"
                 android:textColor="@color/white"
                 android:textSize="16dp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/imageView5"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/main_ic_nfc" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="NFC스캔"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/imageView6"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/main_ic_uncheck" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="점검승인"
-                android:textColor="@color/white"
-                android:textSize="16dp"
-                android:textStyle="bold" />
-        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

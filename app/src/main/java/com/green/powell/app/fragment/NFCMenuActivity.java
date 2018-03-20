@@ -57,8 +57,7 @@ public class NFCMenuActivity extends AppCompatActivity{
             UtilClass.logD(TAG, "count="+fragmentStackCount+", tag="+tag);
             if(tag.equals("메인")){
                 backPressCloseSystem.onBackPressed();
-            }else if(fragmentStackCount!=1&&(tag.equals("점검관리작성")||tag.equals("점검관리수정")||tag.equals("점검관리상세")||tag.equals("장치관리상세")
-                        ||tag.equals("도면관리상세")||tag.equals("MSDS관리상세"))){
+            }else if(fragmentStackCount!=1&&(tag.equals(title+"작성")||tag.equals(title+"수정")||tag.equals(title+"상세"))){
                 super.onBackPressed();
             }else{
                 UtilClass.logD(TAG, "피니쉬");
@@ -92,11 +91,11 @@ public class NFCMenuActivity extends AppCompatActivity{
 
         fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        if(title.equals("장치관리")){
+        if(title.equals("설비정보")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new EquipmentFragment());
-        }else if(title.equals("MSDS관리")){
+        }else if(title.equals("일상점검")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new CheckFragment());
-        }else if(title.equals("점검관리")){
+        }else if(title.equals("정기점검")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new CheckFragment());
         }else if(title.equals("NFC관리")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new SettingActivity());

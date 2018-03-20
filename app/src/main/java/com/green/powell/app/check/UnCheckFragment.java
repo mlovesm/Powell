@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -115,7 +116,7 @@ public class UnCheckFragment extends Fragment{
                         }
 
                         mAdapter = new CheckAdapter(getActivity(), arrayList, "UnCheck");
-                        listView.setAdapter(mAdapter);
+                        listView.setAdapter((ListAdapter) mAdapter);
                     } catch ( Exception e ) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), "에러코드 UnCheck 1", Toast.LENGTH_SHORT).show();
