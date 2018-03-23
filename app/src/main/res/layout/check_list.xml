@@ -35,18 +35,18 @@
                 android:id="@+id/textView15"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true" />
+
             <TextView
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/blue2"
                 android:id="@+id/textButton1"
-                android:layout_width="120dp"
+                android:layout_width="100dp"
                 android:layout_height="35dp"
-                android:text="2017.04.01"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/textView16"
                 android:background="@drawable/box_blueline"
                 android:gravity="center"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/textView16" />
+                android:textColor="@color/blue2"
+                android:textSize="14sp"
+                android:textStyle="bold" />
             <TextView
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -60,18 +60,18 @@
                 android:layout_toStartOf="@+id/textButton2"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp" />
+
             <TextView
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/blue2"
-                android:gravity="center"
                 android:id="@+id/textButton2"
-                android:layout_width="120dp"
+                android:layout_width="100dp"
                 android:layout_height="35dp"
-                android:text="2017.04.12"
-                android:background="@drawable/box_blueline"
                 android:layout_alignTop="@+id/textButton1"
-                android:layout_toStartOf="@+id/linearLayout" />
+                android:layout_toStartOf="@+id/linearLayout"
+                android:background="@drawable/box_blueline"
+                android:gravity="center"
+                android:textColor="@color/blue2"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:background="@drawable/box_basic"
@@ -108,9 +108,10 @@
         android:layout_below="@id/search_top">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/listView1"
+            android:id="@+id/recyclerView1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layoutAnimation="@anim/layout_animation_from_right"
             />
 
     </android.support.v4.widget.SwipeRefreshLayout>

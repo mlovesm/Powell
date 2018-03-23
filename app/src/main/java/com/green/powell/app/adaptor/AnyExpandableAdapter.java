@@ -111,7 +111,7 @@ public class AnyExpandableAdapter extends AnimatedExpandableListView.AnimatedExp
             state="양호";
         }else if(headerItems.getState().equals("2")){
             groupHolder.state.setBackgroundResource(R.drawable.box_red);
-            state="고장";
+            state="이상";
         }else{
             groupHolder.state.setBackgroundResource(R.drawable.box_basic);
             state="미점검";

@@ -29,7 +29,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = "LoginActivity";
+    private final String TAG = this.getClass().getSimpleName();
     private ProgressDialog pDlalog = null;
     private boolean valid = true;
 
@@ -69,17 +69,21 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void saveLoginData(Response<LoginDatas> response) {
-        String user_id= _user_id.getText().toString();
         String user_pwStr= _user_pw.getText().toString();
+        String userId="";
+        String userName="";
         String latest_app_ver="";
         try {
+            userId= response.body().getUser_id();
+            userName= response.body().getUser_name();
             latest_app_ver= response.body().getLATEST_APP_VER();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        pref.put("userId",user_id);
+        pref.put("userId",userId);
+        pref.put("userName",userName);
         pref.put("userPw",user_pwStr);
         pref.put("LATEST_APP_VER",latest_app_ver);
     }

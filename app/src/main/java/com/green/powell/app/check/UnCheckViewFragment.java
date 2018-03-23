@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.green.powell.app.R;
+import com.green.powell.app.equipment.EquipmentTab1Fragment;
 import com.green.powell.app.util.UtilClass;
 
 import butterknife.Bind;
@@ -18,13 +19,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class UnCheckViewFragment extends Fragment {
-    private static final String TAG = "UnCheckViewFragment";
+    private final String TAG = this.getClass().getSimpleName();
 
     public static TabLayout tabLayout;
     public static ViewPager viewPager;
     public static int int_items = 2 ;
-
-    @Bind(R.id.top_title) TextView textTitle;
 
     private String idx="";
 
@@ -67,7 +66,6 @@ public class UnCheckViewFragment extends Fragment {
             }
         });
 
-        textTitle.setText(getArguments().getString("title"));
         idx= getArguments().getString("equip_no");
 
         return view;
@@ -88,7 +86,7 @@ public class UnCheckViewFragment extends Fragment {
         {
             switch (position){
                 case 0 : return new UnCheckTab1Fragment(idx);
-                case 1 : return new UnCheckTab2Fragment(idx);
+                case 1 : return new EquipmentTab1Fragment(idx);
             }
             return null;
         }
@@ -119,9 +117,4 @@ public class UnCheckViewFragment extends Fragment {
         }
     }
 
-
-    @OnClick(R.id.top_home)
-    public void goHome() {
-        UtilClass.goHome(getActivity());
-    }
 }

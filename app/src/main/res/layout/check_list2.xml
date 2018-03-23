@@ -74,11 +74,4 @@
         android:divider="@color/white"
         android:background="@drawable/border_top"
         />
-    <include
-        android:id="@id/layout_top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/inc_top"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
 </RelativeLayout>

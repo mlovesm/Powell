@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.green.powell.app.R;
 import com.green.powell.app.fragment.FragMenuActivity;
-import com.green.powell.app.fragment.NFCMenuActivity;
 import com.green.powell.app.retrofit.Datas;
 import com.green.powell.app.retrofit.RetrofitService;
 import com.green.powell.app.util.BackPressCloseSystem;
@@ -44,7 +43,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
 //    adb shell dumpsys activity activities | findstr "Run"
-    private static final String TAG = "MainActivity";
+    private final String TAG = this.getClass().getSimpleName();
 //    public static String ipAddress= "http://w-cms.co.kr:9090";
     public static String ipAddress= "http://192.168.0.22:9191";
     public static String contextPath= "/powell";
@@ -68,17 +67,21 @@ public class MainActivity extends AppCompatActivity {
     public static String loginName;
     public static String latestAppVer;
 
-    @Bind(R.id.textView1) TextView textView1;
+    @Bind(R.id.textView1) TextView tvData1;
+    @Bind(R.id.textView2) TextView tvData2;
+    @Bind(R.id.textView3) TextView tvData3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UtilClass.logD(TAG, "onCreate");
         setContentView(R.layout.main);
         ButterKnife.bind(this);
         backPressCloseSystem = new BackPressCloseSystem(this);
         service= RetrofitService.rest_api.create(RetrofitService.class);
 
         loginUserId = pref.getValue("userId","");
+        loginName = pref.getValue("userName","");
         latestAppVer = pref.getValue("LATEST_APP_VER","");
 
         String currentAppVer= getAppVersion(this);
@@ -97,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
         permissionlistener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
-//                Toast.makeText(getApplicationContext(), "권한 허가", Toast.LENGTH_SHORT).show();
                 phone_num= getPhoneNumber();
             }
 
@@ -126,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             versionName = info.versionName;
         } catch (PackageManager.NameNotFoundException e) {
-            UtilClass.logD(TAG, "getAppVersion Error");
+            e.printStackTrace();
         }
 
         return versionName;
@@ -134,7 +136,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        UtilClass.logD(TAG, "onResume");
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        UtilClass.logD(TAG, "onPause");
+        super.onPause();
     }
 
     @Override
@@ -149,6 +158,13 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @OnClick({R.id.mainImage2, R.id.button2})
+    public void getCheckFailList() {
+        Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
+        intent.putExtra("title", "점검이상리스트");
+        startActivity(intent);
+    }
+
     @OnClick(R.id.imageView1)
     public void getMenu1() {
         Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
@@ -158,8 +174,9 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.imageView2)
     public void getMenu2() {
-        Intent intent = new Intent(getBaseContext(), NFCMenuActivity.class);
+        Intent intent = new Intent(getBaseContext(), FragMenuActivity.class);
         intent.putExtra("title", "NFC관리");
+//        intent.putExtra("title", "NFC_테스트");
         startActivity(intent);
     }
 
@@ -167,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     public void getMenu3() {
         Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
         intent.putExtra("title", "일상점검");
-        intent.putExtra("gubun","Y");
+        intent.putExtra("pc_type","N");
         startActivity(intent);
     }
 
@@ -175,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
     public void getMenu4() {
         Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
         intent.putExtra("title", "정기점검");
-        intent.putExtra("gubun","N");
+        intent.putExtra("pc_type","Y");
         startActivity(intent);
 
 
@@ -185,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
     public void async_progress_dialog(){
         service = RetrofitService.rest_api.create(RetrofitService.class);
 
-        Call<Datas> call = service.listData("Check","unCheckList", "");
+        Call<Datas> call = service.listData("Check","failCheckList");
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -194,7 +211,8 @@ public class MainActivity extends AppCompatActivity {
                     UtilClass.logD(TAG, "isSuccessful="+response.body().toString());
                     String status= response.body().getStatus();
                     try {
-                        textView1.setText(response.body().getCount()+"");
+                        tvData2.setText(String.valueOf(response.body().getCount()));
+                        tvData3.setText(response.body().getList().get(0).get("EQUIP_NM"));
 //                        BadgeClass.setBadge(getApplicationContext(), response.body().getCount());
 
                     } catch ( Exception e ) {

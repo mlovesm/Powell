@@ -88,7 +88,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="장치번호"
+                        android:text="설비코드"
                         android:textColor="@color/font_333"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -115,7 +115,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="장치명"
+                        android:text="설비명"
                         android:textColor="@color/font_333"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -142,7 +142,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="내용물"
+                        android:text="TAG NO"
                         android:textColor="@color/font_333"
                         android:textSize="14sp"
                         android:textStyle="bold" />

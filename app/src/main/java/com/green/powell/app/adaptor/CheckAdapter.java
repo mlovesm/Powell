@@ -102,24 +102,32 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder> 
         holder.board_data2.setText(boardList.get(position).get("data2").toString());
         holder.board_data3.setText(boardList.get(position).get("data3").toString());
 
-        String checkState= boardList.get(position).get("data4").toString();
-        if(checkState.equals("1")){
-            holder.board_data4.setText("양호");
-            holder.board_data4.setBackgroundResource(R.drawable.box_green);
-        }else if(checkState.equals("2")){
-            holder.board_data4.setText("고장");
-            holder.board_data4.setBackgroundResource(R.drawable.box_red);
-        }else {
-            holder.board_data4.setText("");
-            holder.board_data4.setBackgroundResource(R.drawable.box_red);
-        }
-
-        holder.board_data4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                UtilClass.logD(TAG, "들어옴");
+        if(name.equals("Check")){
+            String checkState= boardList.get(position).get("data4").toString();
+            if(checkState.equals("1")){
+                holder.board_data4.setText("양호");
+                holder.board_data4.setBackgroundResource(R.drawable.box_green);
+            }else if(checkState.equals("2")){
+                holder.board_data4.setText("이상");
+                holder.board_data4.setBackgroundResource(R.drawable.box_red);
+            }else {
+                holder.board_data4.setText("이상");
+                holder.board_data4.setBackgroundResource(R.drawable.box_red);
             }
-        });
+
+            holder.board_data4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    UtilClass.logD(TAG, "들어옴");
+                }
+            });
+
+        }else if(name.equals("UnCheck")){
+            holder.board_data4.setText(boardList.get(position).get("data4").toString());
+
+        }else{
+
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

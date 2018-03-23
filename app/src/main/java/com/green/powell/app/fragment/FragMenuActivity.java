@@ -27,10 +27,12 @@ import android.widget.Toast;
 import com.green.powell.app.R;
 import com.green.powell.app.check.CheckFragment;
 import com.green.powell.app.check.CheckWriteFragment;
+import com.green.powell.app.check.FailCheckFragment;
 import com.green.powell.app.check.UnCheckFragment;
 import com.green.powell.app.equipment.EquipmentFragment;
 import com.green.powell.app.equipment.EquipmentViewFragment;
 import com.green.powell.app.menu.LoginActivity;
+import com.green.powell.app.menu.MainActivity;
 import com.green.powell.app.menu.SettingActivity;
 import com.green.powell.app.nfc.set.NdefMessageParser;
 import com.green.powell.app.nfc.set.ParsedRecord;
@@ -39,7 +41,6 @@ import com.green.powell.app.nfc.set.UriRecord;
 import com.green.powell.app.retrofit.Datas;
 import com.green.powell.app.retrofit.RetrofitService;
 import com.green.powell.app.util.BackPressCloseSystem;
-import com.green.powell.app.util.SettingPreference;
 import com.green.powell.app.util.UtilClass;
 
 import java.util.List;
@@ -56,9 +57,12 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
 
     //태깅 후 넘어온 데이터
     private String pendingIntent;
+    private String target;
     private String tagValue;
 
+    private String eGroup_no;
     private String equip_no;
+    private String pcType;
 
     private DrawerLayout drawer;
     private FragmentManager fm;
@@ -75,8 +79,8 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
         service = RetrofitService.rest_api.create(RetrofitService.class);
 
         title= getIntent().getStringExtra("title");
-        if(title==null) title= "";
         UtilClass.logD(TAG,"onCreate title="+title);
+        UtilClass.logD(TAG,"onCreate pendingIntent="+pendingIntent);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -124,8 +128,10 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
     @Override
     protected void onNewIntent(Intent intent) {
         pendingIntent= intent.getStringExtra("pendingIntent");
+        target= intent.getStringExtra("target");
         UtilClass.logD(TAG, "pending="+ pendingIntent);
         if(pendingIntent!=null){
+            if(target.equals("Check")) pcType= intent.getStringExtra("pc_type");
             // NFC 태그
             Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             if (tag != null) {
@@ -198,7 +204,7 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
     public void onMenuInfo(String title){
         getSupportActionBar().setTitle(title);
 
-        Fragment frag = null;
+        Fragment frag;
         Bundle bundle = new Bundle();
 
         fm = getSupportFragmentManager();
@@ -206,34 +212,43 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
         if(title.equals("미점검리스트")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new UnCheckFragment());
 
+        }else if(title.equals("점검이상리스트")){
+            fragmentTransaction.replace(R.id.fragmentReplace, frag = new FailCheckFragment());
+
         }else if(title.equals("설비정보")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new EquipmentFragment());
+            if(pendingIntent!=null){
+                bundle.putString("eGroup_no", eGroup_no);
+            }
 
         }else if(title.equals("설비정보상세")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new EquipmentViewFragment());
             bundle.putString("equip_no", equip_no);
 
-        }else if(title.equals("일상점검")||title.equals("정기점검")){
+        }else if(title.equals("일상점검")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new CheckFragment());
-            bundle.putString("gubun", getIntent().getStringExtra("gubun"));
+            bundle.putString("pc_type", "N");
+
+        }else if(title.equals("정기점검")){
+            fragmentTransaction.replace(R.id.fragmentReplace, frag = new CheckFragment());
+            bundle.putString("pc_type", "Y");
 
         }else if(title.equals("NFC관리")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new SettingActivity());
 
-        }else if(title.equals("NFC점검관리_UPDATE")){
-            fragmentTransaction.replace(R.id.fragmentReplace, frag = new CheckWriteFragment());
-            bundle.putString("check_date",getIntent().getStringExtra("check_date"));
-            bundle.putString("chk_no",getIntent().getStringExtra("chk_no"));
-            bundle.putString("mode",getIntent().getStringExtra("mode"));
-
-        }else if(title.equals("NFC점검관리_INSERT")){
+        }else if(title.equals("일상점검작성")||title.equals("정기점검작성")){
             fragmentTransaction.replace(R.id.fragmentReplace, frag = new CheckWriteFragment());
             bundle.putString("TAG_ID",getIntent().getStringExtra("TAG_ID"));
+            bundle.putString("eGroup_no",getIntent().getStringExtra("eGroup_no"));
             bundle.putString("equip_no",getIntent().getStringExtra("equip_no"));
             bundle.putString("mode",getIntent().getStringExtra("mode"));
-            bundle.putString("use_part1",getIntent().getStringExtra("use_part1"));
-            bundle.putString("use_part2",getIntent().getStringExtra("use_part2"));
+            bundle.putString("pc_type", getIntent().getStringExtra("pc_type"));
+            bundle.putString("groupYN", getIntent().getStringExtra("groupYN"));
 
+        }else if(title.equals("NFC_테스트")){
+            nfcTaggingData();
+
+            return;
         }else{
             return;
         }
@@ -260,7 +275,7 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
     public void async_progress_dialog(){
         RetrofitService service = RetrofitService.rest_api.create(RetrofitService.class);
 
-        Call<Datas> call = service.listData("Check","unCheckList", "0001");
+        Call<Datas> call = service.listData("Check","unCheckList");
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -269,8 +284,6 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
                     UtilClass.logD(TAG, "isSuccessful="+response.body().toString());
                     String status= response.body().getStatus();
                     try {
-//                        topText.setText(String.valueOf(response.body().getCount()));
-//                        BadgeClass.setBadge(getApplicationContext(), response.body().getCount());
 
                     } catch ( Exception e ) {
                         e.printStackTrace();
@@ -291,6 +304,12 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
     }
 
     public void nfcTaggingData(){
+        //NFC 테스트
+//        pendingIntent= "일상점검";
+//        tagValue= "E1200";
+//        target= "Check";
+//        pcType= "N";
+
         final ProgressDialog pDlalog = new ProgressDialog(this);
         UtilClass.showProcessingDialog(pDlalog);
         Call<Datas> call = service.listData("Check","tagDataInfo", tagValue);
@@ -304,29 +323,35 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
                     try {
                         if(response.body().getCount()==0){
                             Toast.makeText(getApplicationContext(), "해당 태그에 대한 데이터가 없습니다.", Toast.LENGTH_SHORT).show();
+
                         }else{
-                            equip_no= response.body().getList().get(0).get("EQUIP_NO").toString();
-                            String use_part1= response.body().getList().get(0).get("USE_PART1").toString();
-                            String use_part2= response.body().getList().get(0).get("USE_PART2").toString();
-
-                            if(equip_no.equals("")){
-                                Toast.makeText(getApplicationContext(), "해당 태그에 대한 데이터가 없습니다.", Toast.LENGTH_SHORT).show();
+                            if(status.equals("groupY")){    //그룹 태그
+                                eGroup_no= response.body().getList().get(0).get("EGROUP_NO").toString();
+                                equip_no="";
                             }else{
-                                if(pendingIntent.equals("점검관리등록")){
-                                    Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
-                                    intent.putExtra("title", "NFC점검관리_INSERT");
-                                    intent.putExtra("TAG_ID",tagValue);
-                                    intent.putExtra("equip_no",equip_no);
-                                    intent.putExtra("use_part1",use_part1);
-                                    intent.putExtra("use_part2",use_part2);
-                                    intent.putExtra("mode", "insert");
-                                    startActivity(intent);
-                                    finish();
+                                eGroup_no= response.body().getList().get(0).get("EGROUP_NO").toString();
+                                equip_no= response.body().getList().get(0).get("EQUIP_NO").toString();
+                            }
 
-                                }else{
+                            if(target.equals("Check")){
+                                Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
+                                intent.putExtra("title", pendingIntent+"작성");
+                                intent.putExtra("TAG_ID",tagValue);
+                                intent.putExtra("eGroup_no",eGroup_no);
+                                intent.putExtra("equip_no",equip_no);
+                                intent.putExtra("pc_type",pcType);
+                                intent.putExtra("groupYN",status);
+                                intent.putExtra("mode", "insert");
+                                startActivity(intent);
+                                finish();
+
+                            }else{  //설비정보
+                                if(equip_no==""){   //그룹태그
                                     title= pendingIntent;
-                                    onMenuInfo(title);
+                                }else{
+                                    title= pendingIntent+"상세";
                                 }
+                                onMenuInfo(title);
                             }
 
                         }
@@ -412,24 +437,15 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
 
         } else if (id == R.id.nav_menu2) {
             intent = new Intent(getApplicationContext(),FragMenuActivity.class);
-            intent.putExtra("title", "도면관리");
+            intent.putExtra("title", "일상점검");
 
         } else if (id == R.id.nav_menu3) {
-//            Toast.makeText(getApplicationContext(),"비활성화 메뉴입니다.", Toast.LENGTH_SHORT).show();
             intent = new Intent(getApplicationContext(),FragMenuActivity.class);
-            intent.putExtra("title", "MSDS관리");
+            intent.putExtra("title", "정기점검");
 
         } else if (id == R.id.nav_menu4) {
-                intent = new Intent(getApplicationContext(), FragMenuActivity.class);
-                intent.putExtra("title", "점검관리");
-
-        } else if (id == R.id.nav_menu5) {
-                intent = new Intent(getApplicationContext(), NFCMenuActivity.class);
-                intent.putExtra("title", "NFC관리");
-
-        } else if (id == R.id.nav_menu6) {
-                intent = new Intent(getApplicationContext(), FragMenuActivity.class);
-                intent.putExtra("title", "점검승인");
+            intent = new Intent(getApplicationContext(), FragMenuActivity.class);
+            intent.putExtra("title", "NFC관리");
 
         } else if (id == R.id.nav_log_out) {
             alertDialog("L");

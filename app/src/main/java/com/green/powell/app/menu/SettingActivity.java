@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
  */
 public class SettingActivity extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener{
 
-    private static final String TAG="SettingActivity";
+    private final String TAG= this.getClass().getSimpleName();
     private NfcAdapter mAdapter;
 
     @Override

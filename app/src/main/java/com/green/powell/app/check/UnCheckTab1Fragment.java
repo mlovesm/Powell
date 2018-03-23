@@ -25,10 +25,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UnCheckTab1Fragment extends Fragment {
-    private static final String TAG = "UnCheckTab1Fragment";
+    private final String TAG = this.getClass().getSimpleName();
     private ProgressDialog pDlalog = null;
 
-    private String userId="";
     private String idx="";
 
     @Bind(R.id.textView1) TextView tv_data1;
@@ -72,19 +71,9 @@ public class UnCheckTab1Fragment extends Fragment {
                     String status= response.body().getStatus();
 
                     try {
-                        for (Iterator iter = response.body().getList().get(0).entrySet().iterator(); iter.hasNext();) {
-                            Map.Entry entry = (Map.Entry) iter.next();
-                            String key = (String)entry.getKey();
-
-                            if(entry.getValue()==null){
-                                entry.setValue("");
-                            }
-                        }
-                        userId= response.body().getList().get(0).get("USER_ID").toString();
-
                         tv_data1.setText(response.body().getList().get(0).get("EQUIP_NO").toString());
-                        tv_data2.setText(response.body().getList().get(0).get("EQUIP_NM").toString().trim());
-                        tv_data3.setText(response.body().getList().get(0).get("MSDS_NM").toString().trim());
+                        tv_data2.setText(response.body().getList().get(0).get("EQUIP_NM").toString());
+                        tv_data3.setText(response.body().getList().get(0).get("EQUIP_NO").toString());
 
                     } catch ( Exception e ) {
                         e.printStackTrace();
@@ -122,18 +111,8 @@ public class UnCheckTab1Fragment extends Fragment {
                     String status= response.body().getStatus();
 
                     try {
-                        for (Iterator iter = response.body().getList().get(0).entrySet().iterator(); iter.hasNext();) {
-                            Map.Entry entry = (Map.Entry) iter.next();
-                            String key = (String)entry.getKey();
-
-                            if(entry.getValue()==null){
-                                entry.setValue("");
-                            }
-                        }
-                        userId= response.body().getList().get(0).get("USER_ID").toString();
-
                         tv_data4.setText(response.body().getList().get(0).get("MAX_DATE").toString().trim());
-                        tv_data5.setText(response.body().getList().get(0).get("USER_NM").toString().trim());
+                        tv_data5.setText(response.body().getList().get(0).get("USER_ID").toString().trim());
                         tv_data6.setText(String.valueOf(Double.valueOf(response.body().getList().get(0).get("CHECK_CNT")).intValue())
                             +response.body().getList().get(0).get("TYPE_KOR").toString());
                         tv_data7.setText(String.valueOf(Double.valueOf(response.body().getList().get(0).get("OVER_CNT")).intValue())

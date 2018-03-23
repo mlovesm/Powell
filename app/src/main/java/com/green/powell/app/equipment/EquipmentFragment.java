@@ -66,7 +66,6 @@ public class EquipmentFragment extends Fragment implements EquipmentAdapter.Card
     private String[] groupKeyList;
     private String[] groupValueList;
     String selectGroupNoKey;
-    String selectGroupName;
 
     private String selectedPostionKey;  //스피너 선택된 키값
     private int selectedPostion=0;    //스피너 선택된 Row 값
@@ -83,6 +82,9 @@ public class EquipmentFragment extends Fragment implements EquipmentAdapter.Card
 
         service = RetrofitService.rest_api.create(RetrofitService.class);
         title= getArguments().getString("title");
+        if(getArguments().getString("eGroup_no")!=null){
+            selectedPostionKey= getArguments().getString("eGroup_no");
+        }
         setHasOptionsMenu(true);
     }
 
@@ -124,7 +126,8 @@ public class EquipmentFragment extends Fragment implements EquipmentAdapter.Card
         }
 
         Intent targetIntent = new Intent(getActivity(), FragMenuActivity.class);
-        targetIntent.putExtra("pendingIntent", title+"상세");
+        targetIntent.putExtra("pendingIntent", title);
+        targetIntent.putExtra("target", "Equipment");
         targetIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mPendingIntent = PendingIntent.getActivity(getActivity(), 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -316,12 +319,13 @@ public class EquipmentFragment extends Fragment implements EquipmentAdapter.Card
 
     @Override
     public void onCardClick(int position) {
-        Fragment frag = null;
+        Fragment frag = new EquipmentViewFragment();
         Bundle bundle = new Bundle();
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentReplace, frag = new EquipmentViewFragment());
+        fragmentTransaction.hide(this);
+        fragmentTransaction.add(R.id.fragmentReplace, frag);
         bundle.putString("title", title+"상세");
         String key= arrayList.get(position).get("key").toString();
         bundle.putString("equip_no", key);

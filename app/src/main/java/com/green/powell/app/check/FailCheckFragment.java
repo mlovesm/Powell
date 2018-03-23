@@ -37,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UnCheckFragment extends Fragment implements CheckAdapter.CardViewClickListener ,SwipeRefreshLayout.OnRefreshListener{
+public class FailCheckFragment extends Fragment implements CheckAdapter.CardViewClickListener ,SwipeRefreshLayout.OnRefreshListener{
     private final String TAG = this.getClass().getSimpleName();
     private ProgressDialog pDlalog = null;
     private String title;
@@ -104,7 +104,7 @@ public class UnCheckFragment extends Fragment implements CheckAdapter.CardViewCl
         pDlalog = new ProgressDialog(getActivity());
         UtilClass.showProcessingDialog(pDlalog);
 
-        Call<Datas> call = service.listData("Check","unCheckList");
+        Call<Datas> call = service.listData("Check","failCheckList");
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -124,20 +124,19 @@ public class UnCheckFragment extends Fragment implements CheckAdapter.CardViewCl
                             HashMap<String,String> hashMap = new HashMap<>();
 //                            hashMap.put("key",Double.valueOf((double) response.body().getList().get(i).get("CHK_NO")).intValue());
                             hashMap.put("key",response.body().getList().get(i).get("EQUIP_NO").toString());
-                            hashMap.put("data1",response.body().getList().get(i).get("EQUIP_NO").toString());
-                            hashMap.put("data2",response.body().getList().get(i).get("EQUIP_NM").toString());
-                            hashMap.put("data3",String.valueOf(Double.valueOf(response.body().getList().get(i).get("CHECK_CNT")).intValue()));
-                            hashMap.put("data4",String.valueOf(Double.valueOf(response.body().getList().get(i).get("OVER_CNT")).intValue()));
-                            hashMap.put("data5",response.body().getList().get(i).get("TYPE_KOR").toString());
+                            hashMap.put("data1",response.body().getList().get(i).get("EQUIP_NM").toString());
+                            hashMap.put("data2",response.body().getList().get(i).get("CHECK_DATE").toString());
+                            hashMap.put("data3",response.body().getList().get(i).get("USER_NM").toString());
+                            hashMap.put("data4",response.body().getList().get(i).get("CHECK_NM").toString());
                             arrayList.add(hashMap);
                         }
-                        mAdapter = new CheckAdapter(getActivity(),R.layout.uncheck_list_item, arrayList, "UnCheck", UnCheckFragment.this);
+                        mAdapter = new CheckAdapter(getActivity(),R.layout.check_list_item, arrayList, "Check", FailCheckFragment.this);
                         mRecyclerView.setAdapter(mAdapter);
 
                         runLayoutAnimation(mRecyclerView);
                     } catch ( Exception e ) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity(), "에러코드 UnCheck 1", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "에러코드 FailCheck 1", Toast.LENGTH_SHORT).show();
                     }
                 }else{
                     Toast.makeText(getActivity(), "response isFailed", Toast.LENGTH_SHORT).show();
@@ -149,7 +148,7 @@ public class UnCheckFragment extends Fragment implements CheckAdapter.CardViewCl
             public void onFailure(Call<Datas> call, Throwable t) {
                 if(pDlalog!=null) pDlalog.dismiss();
                 UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
-                Toast.makeText(getActivity(), "onFailure UnCheck",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "onFailure FailCheck",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -207,22 +206,7 @@ public class UnCheckFragment extends Fragment implements CheckAdapter.CardViewCl
 
     @Override
     public void onCardClick(int position) {
-        Fragment frag = new UnCheckViewFragment();
-        Bundle bundle = new Bundle();
 
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.hide(this);
-        fragmentTransaction.add(R.id.fragmentReplace, frag);
-
-        bundle.putString("title",title+"상세");
-        String key= arrayList.get(position).get("key").toString();
-        bundle.putString("equip_no", key);
-
-        frag.setArguments(bundle);
-        fragmentTransaction.addToBackStack(title+"상세");
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.commit();
     }
 
 

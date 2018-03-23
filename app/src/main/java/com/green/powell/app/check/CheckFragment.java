@@ -54,7 +54,7 @@ public class CheckFragment extends Fragment implements CheckAdapter.CardViewClic
     private final String TAG = this.getClass().getSimpleName();
     private ProgressDialog pDlalog = null;
     private String title;
-    private String gubun;
+    private String pcType;
 
     private ArrayList<HashMap<String,String>> arrayList;
     private CheckAdapter mAdapter;
@@ -79,19 +79,13 @@ public class CheckFragment extends Fragment implements CheckAdapter.CardViewClic
         super.onCreate(savedInstanceState);
 
         title= getArguments().getString("title");
-        gubun= getArguments().getString("gubun");
+        pcType = getArguments().getString("pc_type");
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        int resource;
-        if(gubun.equals("Y")){
-            resource= R.layout.test_check_list;
-        }else{
-            resource= R.layout.test_check_list;
-        }
-        View view = inflater.inflate(resource, container, false);
+        View view = inflater.inflate(R.layout.check_list, container, false);
         ButterKnife.bind(this, view);
 
         tv_button1.setText(UtilClass.getCurrentDate(2));
@@ -117,7 +111,9 @@ public class CheckFragment extends Fragment implements CheckAdapter.CardViewClic
         }
 
         Intent targetIntent = new Intent(getActivity(), FragMenuActivity.class);
-        targetIntent.putExtra("pendingIntent", title+"등록");
+        targetIntent.putExtra("pendingIntent", title);
+        targetIntent.putExtra("pc_type", pcType);
+        targetIntent.putExtra("target", "Check");
         targetIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         mPendingIntent = PendingIntent.getActivity(getActivity(), 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -228,7 +224,7 @@ public class CheckFragment extends Fragment implements CheckAdapter.CardViewClic
         pDlalog = new ProgressDialog(getActivity());
         UtilClass.showProcessingDialog(pDlalog);
 
-        Call<Datas> call = service.listData("Check","checkMInfoList", tv_button1.getText().toString(), tv_button2.getText().toString(), "");
+        Call<Datas> call = service.listData("Check","checkMInfoList", tv_button1.getText().toString(), tv_button2.getText().toString(), pcType);
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -332,11 +328,12 @@ public class CheckFragment extends Fragment implements CheckAdapter.CardViewClic
 
         bundle.putString("title",title+"작성");
         bundle.putString("mode","insert");
-        bundle.putString("gubun", gubun);
+        bundle.putString("pc_type", pcType);
         frag.setArguments(bundle);
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
+        fragmentTransaction.hide(this);
         fragmentTransaction.add(R.id.fragmentReplace, frag);
         fragmentTransaction.addToBackStack(title+"작성");
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -345,12 +342,14 @@ public class CheckFragment extends Fragment implements CheckAdapter.CardViewClic
 
     @Override
     public void onCardClick(int position) {
-        Fragment frag = null;
+        Fragment frag = new CheckWriteFragment();
         Bundle bundle = new Bundle();
 
         FragmentManager fm = getFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.add(R.id.fragmentReplace, frag = new CheckWriteFragment());
+        fragmentTransaction.hide(this);
+        fragmentTransaction.add(R.id.fragmentReplace, frag);
+
         bundle.putString("title",title+"상세");
         String key= arrayList.get(position).get("key").toString();
         String check_date= arrayList.get(position).get("data2").toString();
@@ -360,6 +359,7 @@ public class CheckFragment extends Fragment implements CheckAdapter.CardViewClic
 
         frag.setArguments(bundle);
         fragmentTransaction.addToBackStack(title+"상세");
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.commit();
     }
 

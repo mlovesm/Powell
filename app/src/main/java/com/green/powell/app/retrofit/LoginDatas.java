@@ -6,6 +6,7 @@ public class LoginDatas {
 	String LATEST_APP_VER;
 	int result;
 	String user_id;
+	String user_name;
 	String and_id;
 
 	int flag;
@@ -46,6 +47,14 @@ public class LoginDatas {
 		return and_id;
 	}
 
+	public String getUser_name() {
+		return user_name;
+	}
+
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
+	}
+
 	public int getFlag() {
 		return flag;
 	}
@@ -62,6 +71,7 @@ public class LoginDatas {
 				", LATEST_APP_VER='" + LATEST_APP_VER + '\'' +
 				", result=" + result +
 				", user_id='" + user_id + '\'' +
+				", user_name='" + user_name + '\'' +
 				", and_id='" + and_id + '\'' +
 				", flag=" + flag +
 				'}';

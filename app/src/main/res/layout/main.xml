@@ -41,7 +41,17 @@
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:gravity="center|right"
-                    android:text="12건"
+                    android:text="0"
+                    android:textColor="@color/colorAccent2"
+                    android:textSize="68sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center|right"
+                    android:text="건"
                     android:textColor="@color/colorAccent2"
                     android:textSize="64sp"
                     android:textStyle="bold" />
@@ -83,17 +93,28 @@
                 android:orientation="horizontal"
                 android:layout_margin="10dp"
                 >
+
                 <TextView
+                    android:id="@+id/textView2"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:gravity="center|right"
-                    android:layout_marginRight="10dp"
-                    android:text="2건"
-                    android:textSize="64sp"
-                    android:textStyle="bold"
+                    android:text="0"
                     android:textColor="@color/orange_dark"
-                    />
+                    android:textSize="68sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center|right"
+                    android:text="건"
+                    android:textColor="@color/orange_dark"
+                    android:textSize="64sp"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/mainImage2"
@@ -109,17 +130,18 @@
                 android:orientation="horizontal"
                 android:layout_margin="1dp"
                 >
+
                 <TextView
+                    android:id="@+id/textView3"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_marginRight="10dp"
                     android:text="제1설비시설 이상"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
                     android:textColor="@color/black"
-                    />
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
                 <Button
                     android:id="@id/button2"
                     android:layout_width="120dp"
@@ -128,7 +150,7 @@
                     android:background="@drawable/box_orange"
                     android:padding="2dp"
                     android:layout_marginRight="24dp"
-                    android:text="고장"
+                    android:text="이상"
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     android:textStyle="bold"
