@@ -1,113 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="76dp"
-    android:orientation="vertical"
-    android:layout_marginBottom="5dp"
-    >
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardCornerRadius="@dimen/cardview_round_basic">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        >
-        <RelativeLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:background="@drawable/border_bottom_item"
-            android:paddingRight="10dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
             >
-            <TextView
-                android:layout_width="120dp"
-                android:layout_height="match_parent"
-                android:gravity="center|left"
-                android:layout_marginLeft="10dp"
-                android:textSize="15sp"
-                android:textColor="@color/font_333"
-                android:textStyle="bold"
-                android:text="장비코드"
-                android:ellipsize="end"
-                android:id="@+id/textView1"
-                android:maxLines="1"
-                android:layout_alignParentStart="true"
-                android:maxWidth="220dp" />
-            <TextView
-                android:id="@+id/textView2"
-                android:maxLines="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_toEndOf="@+id/textView1"
-                android:layout_marginStart="6dp"
-                android:gravity="center|left"
-                android:textSize="15sp"
-                android:textColor="@color/font_333"
-                android:textStyle="bold"
-                android:text="장비명"
-                android:ellipsize="end"
-                />
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:background="@drawable/border_bottom">
 
-        <TextView
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:gravity="center|left"
-            android:layout_marginLeft="10dp"
-            android:text="점검주기"
-            android:textSize="14sp"
-            android:id="@+id/text1"
-            android:textColor="@color/font_333"
-            />
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="58dp"
-            android:layout_height="match_parent"
-            android:gravity="center|left"
-            android:textSize="14sp"
-            android:textColor="@color/font_333"
-            android:text="100일"
-            android:textStyle="bold"
-            android:maxWidth="150dp"
-            android:maxLines="1"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/text1"
-            android:layout_marginStart="6dp"
-            />
-            <TextView
-                android:id="@+id/text2"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:gravity="center|left"
-                android:textSize="14sp"
-                android:textColor="@color/font_333"
-                android:text="경과일"
-                android:maxWidth="150dp"
-                android:maxLines="1"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/textView3"
-                android:layout_marginStart="2dp"
-                />
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="60dp"
-                android:layout_height="match_parent"
-                android:gravity="center|left"
-                android:textSize="14sp"
-                android:textColor="@color/orange_dark"
-                android:textStyle="bold"
-                android:text="100일"
-                android:maxWidth="150dp"
-                android:maxLines="1"
-                android:layout_alignParentTop="true"
-                android:layout_toEndOf="@+id/text2"
-                android:layout_marginStart="6dp"
-                />
-            <!-- 버튼 -->
-            <!--<LinearLayout-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="@drawable/border_bottom"
+                android:paddingRight="10dp">
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginLeft="10dp"
+                    android:ellipsize="end"
+                    android:gravity="center|left"
+                    android:maxLines="1"
+                    android:maxWidth="220dp"
+                    android:text="장비코드"
+                    android:textColor="@color/font_333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="6dp"
+                    android:layout_toEndOf="@+id/textView1"
+                    android:ellipsize="end"
+                    android:gravity="center|left"
+                    android:maxLines="1"
+                    android:text="장비명"
+                    android:textColor="@color/font_333"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="@drawable/border_bottom_item">
+
+                <TextView
+                    android:id="@+id/text1"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center|left"
+                    android:text="점검주기"
+                    android:textColor="@color/font_333"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="58dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="6dp"
+                    android:layout_toEndOf="@+id/text1"
+                    android:gravity="center|left"
+                    android:maxLines="1"
+                    android:maxWidth="150dp"
+                    android:text="100일"
+                    android:textColor="@color/font_333"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/text2"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="2dp"
+                    android:layout_toEndOf="@+id/textView3"
+                    android:gravity="center|left"
+                    android:maxLines="1"
+                    android:maxWidth="150dp"
+                    android:text="경과일"
+                    android:textColor="@color/font_333"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="6dp"
+                    android:layout_toEndOf="@+id/text2"
+                    android:gravity="center|left"
+                    android:maxLines="1"
+                    android:maxWidth="150dp"
+                    android:text="100일"
+                    android:textColor="@color/orange_dark"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+                <!-- 버튼 -->
+                <!--<LinearLayout-->
                 <!--android:background="@drawable/box_line_blue"-->
                 <!--android:layout_width="50dp"-->
                 <!--android:layout_height="30dp"-->
@@ -118,17 +121,17 @@
                 <!--android:layout_marginRight="10dp"-->
                 <!--&gt;-->
                 <!--<TextView-->
-                    <!--android:id="@+id/text1"-->
-                    <!--android:gravity="center"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:text="정보"-->
-                    <!--android:textSize="14sp"-->
-                    <!--android:textStyle="bold"-->
-                    <!--android:textColor="@color/blue_dark"-->
-                    <!--/>-->
-            <!--</LinearLayout>-->
-        </RelativeLayout>
+                <!--android:id="@+id/text1"-->
+                <!--android:gravity="center"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:text="정보"-->
+                <!--android:textSize="14sp"-->
+                <!--android:textStyle="bold"-->
+                <!--android:textColor="@color/blue_dark"-->
+                <!--/>-->
+                <!--</LinearLayout>-->
+            </RelativeLayout>
 
-    </LinearLayout>
-</LinearLayout>
+        </LinearLayout>
+</android.support.v7.widget.CardView>

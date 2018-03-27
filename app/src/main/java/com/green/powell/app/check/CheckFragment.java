@@ -240,7 +240,7 @@ public class CheckFragment extends Fragment implements CheckAdapter.CardViewClic
                         arrayList.clear();
                         for(int i=0; i<response.body().getList().size();i++){
                             HashMap<String,String> hashMap = new HashMap<>();
-                            hashMap.put("key",String.valueOf(Double.valueOf(response.body().getList().get(i).get("CHK_NO")).intValue()));
+                            hashMap.put("key",response.body().getList().get(i).get("CHK_NO"));
                             hashMap.put("data1",response.body().getList().get(i).get("EQUIP_NM"));
                             hashMap.put("data2",response.body().getList().get(i).get("CHECK_DATE"));
                             hashMap.put("data3",response.body().getList().get(i).get("USER_NM"));

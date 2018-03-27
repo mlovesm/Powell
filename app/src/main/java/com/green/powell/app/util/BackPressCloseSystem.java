@@ -3,8 +3,6 @@ package com.green.powell.app.util;
 import android.app.Activity;
 import android.widget.Toast;
 
-import com.green.powell.app.menu.MainActivity;
-
 /**
  * Created by GS on 2016-02-14.
  */
@@ -47,7 +45,7 @@ public class BackPressCloseSystem {
     }
 
     private void programShutdown() {
-        MainActivity.onAppCheck= false;
+//        MainActivity.onAppCheck= false;
 
         activity .moveTaskToBack(true);
         activity .finish();

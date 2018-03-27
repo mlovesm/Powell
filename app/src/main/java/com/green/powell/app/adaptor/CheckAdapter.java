@@ -98,12 +98,12 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int pos) {
         final int position= pos;
-        holder.board_data1.setText(boardList.get(position).get("data1").toString());
-        holder.board_data2.setText(boardList.get(position).get("data2").toString());
-        holder.board_data3.setText(boardList.get(position).get("data3").toString());
+        holder.board_data1.setText(boardList.get(position).get("data1"));
+        holder.board_data2.setText(boardList.get(position).get("data2"));
+        holder.board_data3.setText(boardList.get(position).get("data3"));
 
         if(name.equals("Check")){
-            String checkState= boardList.get(position).get("data4").toString();
+            String checkState= boardList.get(position).get("data4");
             if(checkState.equals("1")){
                 holder.board_data4.setText("양호");
                 holder.board_data4.setBackgroundResource(R.drawable.box_green);
@@ -118,12 +118,14 @@ public class CheckAdapter extends RecyclerView.Adapter<CheckAdapter.ViewHolder> 
             holder.board_data4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    UtilClass.logD(TAG, "들어옴");
+
                 }
             });
 
         }else if(name.equals("UnCheck")){
-            holder.board_data4.setText(boardList.get(position).get("data4").toString());
+            String type_kor= boardList.get(position).get("data5");
+            holder.board_data3.setText(boardList.get(position).get("data3")+type_kor);
+            holder.board_data4.setText(boardList.get(position).get("data4")+type_kor);
 
         }else{
 

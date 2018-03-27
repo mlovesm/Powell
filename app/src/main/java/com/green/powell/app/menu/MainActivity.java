@@ -18,10 +18,9 @@ import android.telephony.TelephonyManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.green.powell.app.R;
 import com.green.powell.app.fragment.FragMenuActivity;
-import com.green.powell.app.retrofit.Datas;
+import com.green.powell.app.retrofit.DatasB;
 import com.green.powell.app.retrofit.RetrofitService;
 import com.green.powell.app.util.BackPressCloseSystem;
 import com.green.powell.app.util.SettingPreference;
@@ -51,13 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private RetrofitService service;
     private String fileDir= Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator  + "Download" + File.separator;
     private String fileNm;
-
-    //FCM 관련
-    private String token=null;
-    private String phone_num=null;
-    public static boolean onAppCheck= false;
-    public static String pendingPath= "";
-    public static String pendingPathKey= "";
 
     private BackPressCloseSystem backPressCloseSystem;
     private PermissionListener permissionlistener;
@@ -89,35 +81,8 @@ public class MainActivity extends AppCompatActivity {
         if(!currentAppVer.equals(latestAppVer)){
             //최신버전이 아닐때
             fileNm= "powell_"+latestAppVer+"-debug.apk";
-//            alertDialog();
+            alertDialog();
         }
-
-        token = FirebaseInstanceId.getInstance().getToken();
-        UtilClass.logD(TAG, "Refreshed token: " + token);
-
-//        async_progress_dialog();
-
-        permissionlistener = new PermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                phone_num= getPhoneNumber();
-            }
-
-            @Override
-            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                Toast.makeText(getApplicationContext(), "권한 거부 목록\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
-                phone_num="";
-            }
-        };
-        new TedPermission(MainActivity.this)
-                .setPermissionListener(permissionlistener)
-                .setRationaleMessage("전화번호 정보를 가져오기 위해선 권한이 필요합니다.")
-                .setDeniedMessage("권한을 확인하세요.\n\n [설정] > [애플리케이션] [해당앱] > [권한]")
-                .setGotoSettingButtonText("권한확인")
-                .setPermissions(Manifest.permission.CALL_PHONE)
-                .check();
-
-        onAppCheck= true;
 
     }
 
@@ -138,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         UtilClass.logD(TAG, "onResume");
         super.onResume();
+        async_progress_dialog();
     }
 
     @Override
@@ -151,14 +117,14 @@ public class MainActivity extends AppCompatActivity {
         backPressCloseSystem.onBackPressed();
     }
 
-    @OnClick({R.id.mainImage1, R.id.button1})
+    @OnClick({R.id.mainImage1, R.id.button1, R.id.textView1})
     public void getUnCheckList() {
         Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
         intent.putExtra("title", "미점검리스트");
         startActivity(intent);
     }
 
-    @OnClick({R.id.mainImage2, R.id.button2})
+    @OnClick({R.id.mainImage2, R.id.button2, R.id.textView2})
     public void getCheckFailList() {
         Intent intent = new Intent(getBaseContext(),FragMenuActivity.class);
         intent.putExtra("title", "점검이상리스트");
@@ -202,18 +168,21 @@ public class MainActivity extends AppCompatActivity {
     public void async_progress_dialog(){
         service = RetrofitService.rest_api.create(RetrofitService.class);
 
-        Call<Datas> call = service.listData("Check","failCheckList");
-        call.enqueue(new Callback<Datas>() {
+        Call<DatasB> call = service.listDataB("Check","unCheckFailCheckList");
+        call.enqueue(new Callback<DatasB>() {
             @Override
-            public void onResponse(Call<Datas> call, Response<Datas> response) {
+            public void onResponse(Call<DatasB> call, Response<DatasB> response) {
                 UtilClass.logD(TAG, "response="+response);
                 if (response.isSuccessful()) {
                     UtilClass.logD(TAG, "isSuccessful="+response.body().toString());
                     String status= response.body().getStatus();
                     try {
-                        tvData2.setText(String.valueOf(response.body().getCount()));
-                        tvData3.setText(response.body().getList().get(0).get("EQUIP_NM"));
-//                        BadgeClass.setBadge(getApplicationContext(), response.body().getCount());
+                        tvData1.setText(String.valueOf(response.body().getCountA()));
+                        tvData2.setText(String.valueOf(response.body().getCountB()));
+                        if(response.body().getCountB()>0){
+                            tvData3.setText(response.body().getDatasB().get(0).get("EQUIP_NM"));
+                            if(response.body().getCountB()>1) tvData3.setText(response.body().getDatasB().get(0).get("EQUIP_NM")+" 외");
+                        }
 
                     } catch ( Exception e ) {
                         e.printStackTrace();
@@ -225,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Datas> call, Throwable t) {
+            public void onFailure(Call<DatasB> call, Throwable t) {
                 UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
                 Toast.makeText(getApplicationContext(), "onFailure UnCheck",Toast.LENGTH_SHORT).show();
             }

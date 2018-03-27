@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.green.powell.app">
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <!--<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />-->
-    <!--<uses-permission android:name="android.permission.BLUETOOTH" />-->
-    <!--<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
-    <!--<uses-feature android:required="false" android:name="android.hardware.bluetooth_le"/>-->
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,7 +9,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
@@ -39,20 +30,6 @@
 
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-        <service
-            android:name="com.green.powell.app.fcm.MyFirebaseMessagingService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
-
-        <service
-            android:name="com.green.powell.app.fcm.MyFirebaseInstanceIDService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
 
         <activity android:name="com.green.powell.app.menu.LoginActivity">
         </activity>

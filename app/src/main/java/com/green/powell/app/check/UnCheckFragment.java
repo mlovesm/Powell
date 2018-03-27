@@ -116,19 +116,16 @@ public class UnCheckFragment extends Fragment implements CheckAdapter.CardViewCl
                         if(response.body().getCount()==0){
                             Toast.makeText(getActivity(), "데이터가 없습니다.", Toast.LENGTH_SHORT).show();
                         }
-//                        topText.setText(String.valueOf(response.body().getCount()));
-//                        BadgeClass.setBadge(getActivity(), response.body().getCount());
                         arrayList = new ArrayList<>();
                         arrayList.clear();
                         for(int i=0; i<response.body().getList().size();i++){
                             HashMap<String,String> hashMap = new HashMap<>();
-//                            hashMap.put("key",Double.valueOf((double) response.body().getList().get(i).get("CHK_NO")).intValue());
-                            hashMap.put("key",response.body().getList().get(i).get("EQUIP_NO").toString());
-                            hashMap.put("data1",response.body().getList().get(i).get("EQUIP_NO").toString());
-                            hashMap.put("data2",response.body().getList().get(i).get("EQUIP_NM").toString());
-                            hashMap.put("data3",String.valueOf(Double.valueOf(response.body().getList().get(i).get("CHECK_CNT")).intValue()));
-                            hashMap.put("data4",String.valueOf(Double.valueOf(response.body().getList().get(i).get("OVER_CNT")).intValue()));
-                            hashMap.put("data5",response.body().getList().get(i).get("TYPE_KOR").toString());
+                            hashMap.put("key",response.body().getList().get(i).get("EQUIP_NO"));
+                            hashMap.put("data1",response.body().getList().get(i).get("EQUIP_NO"));
+                            hashMap.put("data2",response.body().getList().get(i).get("EQUIP_NM"));
+                            hashMap.put("data3",response.body().getList().get(i).get("CHECK_CNT"));
+                            hashMap.put("data4",response.body().getList().get(i).get("OVER_CNT"));
+                            hashMap.put("data5",response.body().getList().get(i).get("TYPE_KOR"));
                             arrayList.add(hashMap);
                         }
                         mAdapter = new CheckAdapter(getActivity(),R.layout.uncheck_list_item, arrayList, "UnCheck", UnCheckFragment.this);

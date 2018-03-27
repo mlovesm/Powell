@@ -16,7 +16,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
 	private final String TAG = this.getClass().getSimpleName();
 
 	private int resource;
-	private ArrayList<HashMap<String,Object>> boardList;
+	private ArrayList<HashMap<String,String>> boardList;
 	private Context con;
 	private String name;
 
@@ -27,7 +27,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
 
 	}
 
-	public EquipmentAdapter(Context con , int resource, ArrayList<HashMap<String,Object>> array, String name, CardViewClickListener clickListener){
+	public EquipmentAdapter(Context con , int resource, ArrayList<HashMap<String,String>> array, String name, CardViewClickListener clickListener){
 		this.con= con;
 		this.resource = resource;
 		boardList = array;
@@ -39,7 +39,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
 	 * 특정 아이템의 변경사항을 적용하기 위해 기본 아이템을 새로운 아이템으로 변경한다.
 	 * @param boardList 새로운 아이템
 	 */
-	public void setItem(ArrayList<HashMap<String,Object>> boardList) {
+	public void setItem(ArrayList<HashMap<String,String>> boardList) {
 		boardList.get(0);
 	}
 
@@ -47,7 +47,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
 	 * 현재 아이템 리스트에 새로운 아이템 리스트를 추가한다.
 	 * @param boardList 새로운 아이템 리스트
 	 */
-	public void addItemList(ArrayList<HashMap<String,Object>> boardList) {
+	public void addItemList(ArrayList<HashMap<String,String>> boardList) {
 		this.boardList.addAll(boardList);
 		notifyDataSetChanged();
 	}

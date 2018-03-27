@@ -789,7 +789,11 @@ public class CheckWriteFragment extends Fragment {
             String status= response.body().getStatus();
             if(status.equals("success")){
                 Intent intent = new Intent(getActivity(),FragMenuActivity.class);
-                intent.putExtra("title", "정기점검");
+                if(pcType.equals("Y")){
+                    intent.putExtra("title", "정기점검");
+                }else{
+                    intent.putExtra("title", "일상점검");
+                }
                 intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
             }else if(status.equals("half")){

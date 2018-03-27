@@ -138,7 +138,6 @@
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="제1설비시설 이상"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:textStyle="bold" />

@@ -55,7 +55,7 @@ public class EquipmentFragment extends Fragment implements EquipmentAdapter.Card
     private String title;
     private ProgressDialog pDlalog = null;
 
-    private ArrayList<HashMap<String,Object>> arrayList;
+    private ArrayList<HashMap<String,String>> arrayList;
     private EquipmentAdapter mAdapter;
     @Bind(R.id.swipeRefreshLo) SwipeRefreshLayout mSwipeRefreshLayout;
     @Bind(R.id.recyclerView1) RecyclerView mRecyclerView;
@@ -279,11 +279,11 @@ public class EquipmentFragment extends Fragment implements EquipmentAdapter.Card
                         arrayList = new ArrayList<>();
                         arrayList.clear();
                         for(int i=0; i<response.body().getList().size();i++){
-                            HashMap<String,Object> hashMap = new HashMap<>();
-                            hashMap.put("key",response.body().getList().get(i).get("EQUIP_NO").toString());
-                            hashMap.put("data1",response.body().getList().get(i).get("EQUIP_NM").toString());
-                            hashMap.put("data2",response.body().getList().get(i).get("SPEC1").toString());
-                            hashMap.put("data3",response.body().getList().get(i).get("TAG_NO").toString().trim());
+                            HashMap<String,String> hashMap = new HashMap<>();
+                            hashMap.put("key",response.body().getList().get(i).get("EQUIP_NO"));
+                            hashMap.put("data1",response.body().getList().get(i).get("EQUIP_NM"));
+                            hashMap.put("data2",response.body().getList().get(i).get("SPEC1"));
+                            hashMap.put("data3",response.body().getList().get(i).get("TAG_NO"));
                             arrayList.add(hashMap);
                         }
                         mAdapter = new EquipmentAdapter(getActivity(),R.layout.equipment_list_item, arrayList, "Equipment", EquipmentFragment.this);

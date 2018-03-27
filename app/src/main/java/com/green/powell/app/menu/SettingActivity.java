@@ -38,12 +38,10 @@ public class SettingActivity extends PreferenceFragmentCompat implements Prefere
 //        Preference app_ver = findPreference("keyAppVersion");
 //        app_ver.setTitle(MainActivity.getAppVersion(getActivity()));
 
-        Preference nfc_submit = findPreference("nfc_submit");
         Preference nfc_read = findPreference("nfc_read");
         Preference nfc_write = findPreference("nfc_write");
         Preference nfc_setting = findPreference("nfc_setting");
 
-        nfc_submit.setOnPreferenceClickListener(this);
         nfc_read.setOnPreferenceClickListener(this);
         nfc_write.setOnPreferenceClickListener(this);
         nfc_setting.setOnPreferenceClickListener(this);

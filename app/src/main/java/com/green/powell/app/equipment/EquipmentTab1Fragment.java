@@ -73,13 +73,13 @@ public class EquipmentTab1Fragment extends Fragment {
                     try {
                         UtilClass.dataNullCheckZero(response.body().getList().get(0));
 
-                        tv_data1.setText(response.body().getList().get(0).get("EGROUP_NM").toString());
-                        tv_data2.setText(response.body().getList().get(0).get("EQUIP_NO").toString().trim());
-                        tv_data3.setText(response.body().getList().get(0).get("TAG_NO").toString().trim());
-                        tv_data4.setText(response.body().getList().get(0).get("EQUIP_NM").toString().trim());
-                        tv_data5.setText(response.body().getList().get(0).get("SPEC1").toString().trim());
-                        tv_data6.setText(response.body().getList().get(0).get("SPEC2").toString().trim());
-                        tv_data7.setText(response.body().getList().get(0).get("COMP_NM").toString().trim());
+                        tv_data1.setText(response.body().getList().get(0).get("EGROUP_NM"));
+                        tv_data2.setText(response.body().getList().get(0).get("EQUIP_NO"));
+                        tv_data3.setText(response.body().getList().get(0).get("TAG_NO"));
+                        tv_data4.setText(response.body().getList().get(0).get("EQUIP_NM"));
+                        tv_data5.setText(response.body().getList().get(0).get("SPEC1"));
+                        tv_data6.setText(response.body().getList().get(0).get("SPEC2"));
+                        tv_data7.setText(response.body().getList().get(0).get("COMP_NM"));
 
                     } catch ( Exception e ) {
                         e.printStackTrace();

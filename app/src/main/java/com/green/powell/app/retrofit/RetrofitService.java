@@ -36,6 +36,9 @@ public interface RetrofitService {
     @GET("{title}/{sub}")
     Call<Datas> listData(@Path("title") String title, @Path("sub") String sub);
 
+    @GET("{title}/{sub}")
+    Call<DatasB> listDataB(@Path("title") String title, @Path("sub") String sub);
+
     @GET("{title}/{sub}/{path}")
     Call<Datas> listData(@Path("title") String title, @Path("sub") String sub, @Path(value = "path", encoded = true) String path);
 
