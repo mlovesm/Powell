@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
 //    adb shell dumpsys activity activities | findstr "Run"
     private final String TAG = this.getClass().getSimpleName();
-//    public static String ipAddress= "http://w-cms.co.kr:9090";
-    public static String ipAddress= "http://192.168.0.22:9191";
+    public static String ipAddress= "http://220.81.187.59:8585";
+//    public static String ipAddress= "http://192.168.0.22:9191";
     public static String contextPath= "/powell";
     private ProgressDialog pDlalog = null;
     private RetrofitService service;
@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.textView1) TextView tvData1;
     @Bind(R.id.textView2) TextView tvData2;
-    @Bind(R.id.textView3) TextView tvData3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,10 +178,6 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         tvData1.setText(String.valueOf(response.body().getCountA()));
                         tvData2.setText(String.valueOf(response.body().getCountB()));
-                        if(response.body().getCountB()>0){
-                            tvData3.setText(response.body().getDatasB().get(0).get("EQUIP_NM"));
-                            if(response.body().getCountB()>1) tvData3.setText(response.body().getDatasB().get(0).get("EQUIP_NM")+" 외");
-                        }
 
                     } catch ( Exception e ) {
                         e.printStackTrace();

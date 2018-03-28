@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/main_bg"
+    android:background="@drawable/bg"
     android:gravity="center_vertical|center_horizontal"
     android:weightSum="1"
     >
@@ -15,24 +15,32 @@
         android:layout_weight="0.1"
         android:gravity="center"
         android:orientation="vertical"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="6dp"
-        >
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp">
         <!-- main미점검 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="174dp"
-            android:orientation="vertical"
             android:background="@color/colorAccent"
-            android:paddingTop="6dp"
-            >
+            android:orientation="vertical"
+            android:paddingTop="6dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp"
-                >
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/mainImage1"
+                    android:layout_width="0dp"
+                    android:layout_height="104dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_main01" />
 
                 <TextView
                     android:id="@+id/textView1"
@@ -40,7 +48,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:gravity="center|right"
+                    android:gravity="bottom|right"
                     android:text="0"
                     android:textColor="@color/colorAccent2"
                     android:textSize="68sp"
@@ -50,49 +58,52 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
-                    android:gravity="center|right"
+                    android:gravity="bottom|right"
                     android:text="건"
                     android:textColor="@color/colorAccent2"
                     android:textSize="64sp"
                     android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/mainImage1"
-                    android:layout_width="0dp"
-                    android:layout_height="104dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.8"
-                    android:src="@drawable/ic_main01" />
             </LinearLayout>
+
             <Button
                 android:id="@id/button1"
-                android:layout_width="120dp"
+                android:layout_width="124dp"
                 android:layout_height="34dp"
-                android:layout_gravity="top|right"
+                android:layout_gravity="top"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="6dp"
                 android:background="@drawable/box_violet"
                 android:padding="2dp"
-                android:layout_marginRight="26dp"
                 android:text="미점검"
                 android:textColor="@color/white"
                 android:textSize="15sp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <!-- main이상 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:orientation="vertical"
             android:background="@color/white"
-            android:paddingBottom="6dp"
-            >
+            android:orientation="vertical"
+            android:paddingBottom="6dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp"
-                >
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="18dp"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/mainImage2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1.2"
+                    android:src="@drawable/ic_main02" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -100,7 +111,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
                     android:layout_weight="1"
-                    android:gravity="center|right"
+                    android:gravity="bottom|right"
                     android:text="0"
                     android:textColor="@color/orange_dark"
                     android:textSize="68sp"
@@ -110,58 +121,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
-                    android:gravity="center|right"
+                    android:gravity="bottom|right"
                     android:text="건"
                     android:textColor="@color/orange_dark"
                     android:textSize="64sp"
                     android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/mainImage2"
-                    android:layout_width="0dp"
-                    android:layout_height="90dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="0.8"
-                    android:src="@drawable/ic_main02" />
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="1dp"
-                >
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-                <Button
-                    android:id="@id/button2"
-                    android:layout_width="120dp"
-                    android:layout_height="34dp"
-                    android:layout_gravity="top|right"
-                    android:background="@drawable/box_orange"
-                    android:padding="2dp"
-                    android:layout_marginRight="24dp"
-                    android:text="이상"
-                    android:textColor="@color/white"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    />
-            </LinearLayout>
+            <Button
+                android:id="@id/button2"
+                android:layout_width="124dp"
+                android:layout_height="34dp"
+                android:layout_gravity="top|left"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/box_orange"
+                android:padding="2dp"
+                android:text="이상"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold" />
         </LinearLayout>
         <!-- 라인 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/gary_dark"
-            />
+            android:background="@color/gary_dark" />
 
     </LinearLayout>
 
@@ -286,7 +271,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_main06" />
+                android:src="@drawable/ic_main06"
+                android:layout_marginLeft="10dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
