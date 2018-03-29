@@ -14,8 +14,8 @@ import com.green.powell.app.check.CheckWriteFragment;
 import com.green.powell.app.util.AnimatedExpandableListView;
 import com.green.powell.app.util.ExpandedChildModel;
 import com.green.powell.app.util.ExpandedMenuModel;
+import com.green.powell.app.util.UtilClass;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class AnyExpandableAdapter extends AnimatedExpandableListView.AnimatedExpandableListAdapter {
@@ -31,15 +31,10 @@ public class AnyExpandableAdapter extends AnimatedExpandableListView.AnimatedExp
     }
 
 //    private LayoutInflater inflater;
-    private static final String TAG = "AnyExpandableAdapter";
+    private final String TAG = this.getClass().getSimpleName();
 
     private Context mContext;
     private List<ExpandedMenuModel> mListDataHeader; // header titles
-//    private List<ExpandedChildModel> mListDataChild= new ArrayList<ExpandedChildModel>();
-
-    // child data in format of header title, child title
-    private HashMap<ExpandedMenuModel, List<ExpandedChildModel>> mapDataChild;
-    AnimatedExpandableListView expandList;
 
     private LayoutInflater inflater = null;
     private GroupHolder groupHolder = null;
@@ -49,14 +44,6 @@ public class AnyExpandableAdapter extends AnimatedExpandableListView.AnimatedExp
         this.inflater = LayoutInflater.from(context);
         this.mContext = context;
         this.mListDataHeader = listDataHeader;
-    }
-
-    public AnyExpandableAdapter(Context context, List<ExpandedMenuModel> listDataHeader, HashMap<ExpandedMenuModel, List<ExpandedChildModel>> mapDataChild, AnimatedExpandableListView mView) {
-        this.inflater = LayoutInflater.from(context);
-        this.mContext = context;
-        this.mListDataHeader = listDataHeader;
-        this.mapDataChild = mapDataChild;
-        this.expandList = mView;
     }
 
     public void setDataList(List<ExpandedMenuModel> arrays){
@@ -141,10 +128,9 @@ public class AnyExpandableAdapter extends AnimatedExpandableListView.AnimatedExp
     }
 
     @Override
-    public View getRealChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getRealChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         final ExpandedChildModel childItems = getChild(groupPosition, childPosition);
         final ExpandedMenuModel headerItems = (ExpandedMenuModel) getGroup(groupPosition);
-
         View v = convertView;
 
         if(v == null){
@@ -158,20 +144,25 @@ public class AnyExpandableAdapter extends AnimatedExpandableListView.AnimatedExp
             childHolder = (ChildHolder)v.getTag();
 
         }
-        childHolder.etc.addTextChangedListener(new CheckWriteFragment.MyWatcher(childHolder.etc,childPosition));
+//        childHolder.etc.addTextChangedListener(new CheckWriteFragment.MyWatcher(childHolder.etc, groupPosition));
+        CheckWriteFragment.editText= childHolder.etc;
 
         childHolder.etc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             public void onFocusChange(View v, boolean hasFocus) {
+                UtilClass.logD(TAG, "hasFocus="+hasFocus);
                 if(!hasFocus){
                     childItems.setEtc(((EditText)v).getText().toString());
                 }
             }
         });
+
+        childHolder.etc.setText(childItems.getEtc());
+
         //라디오버튼 클릭 이벤트
         childHolder.state.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                //UtilClass.logD("onCheckedChanged",checkedId+"");
+
                 switch (checkedId){
                     case R.id.radio1:
                         headerItems.setState("1");
@@ -184,8 +175,6 @@ public class AnyExpandableAdapter extends AnimatedExpandableListView.AnimatedExp
                 }
             }
         });
-
-        childHolder.etc.setText(childItems.getEtc());
 
         if(headerItems.getState().equals("1")){
             childHolder.state.check(R.id.radio1);

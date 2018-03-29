@@ -16,7 +16,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
 	private final String TAG = this.getClass().getSimpleName();
 
 	private int resource;
-	private ArrayList<HashMap<String,String>> boardList;
+	private ArrayList<HashMap<String,String>> arrayList;
 	private Context con;
 	private String name;
 
@@ -27,10 +27,17 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
 
 	}
 
+	public EquipmentAdapter(Context con , int resource, ArrayList<HashMap<String,String>> array, String name){
+		this.con= con;
+		this.resource = resource;
+		arrayList = array;
+		this.name = name;
+	}
+
 	public EquipmentAdapter(Context con , int resource, ArrayList<HashMap<String,String>> array, String name, CardViewClickListener clickListener){
 		this.con= con;
 		this.resource = resource;
-		boardList = array;
+		arrayList = array;
 		this.name = name;
 		this.clickListener = clickListener;
 	}
@@ -48,7 +55,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
 	 * @param boardList 새로운 아이템 리스트
 	 */
 	public void addItemList(ArrayList<HashMap<String,String>> boardList) {
-		this.boardList.addAll(boardList);
+		this.arrayList.addAll(boardList);
 		notifyDataSetChanged();
 	}
 
@@ -59,7 +66,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
 	 */
 	@Override
 	public int getItemCount() {
-		return this.boardList.size();
+		return this.arrayList.size();
 	}
 
 	/**
@@ -83,9 +90,13 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int pos) {
 		final int position= pos;
-		holder.board_data1.setText(boardList.get(position).get("data1").toString());
-		holder.board_data2.setText(boardList.get(position).get("data2").toString());
-		holder.board_data3.setText(boardList.get(position).get("data3").toString());
+		holder.board_data1.setText(arrayList.get(position).get("data1").toString());
+		holder.board_data2.setText(arrayList.get(position).get("data2").toString());
+		holder.board_data3.setText(arrayList.get(position).get("data3").toString());
+
+		if(name.equals("EquipmentTap")){
+			holder.board_data4.setText(arrayList.get(position).get("data4").toString());
+		}
 
 		holder.itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -108,13 +119,15 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
 		TextView board_data1;
 		TextView board_data2;
 		TextView board_data3;
+		TextView board_data4;
 
 		public ViewHolder(View v) {
 			super(v);
 
 			board_data1 = (TextView)v.findViewById(R.id.textView1);
-			board_data2 = (TextView)v.findViewById(R.id.textView3);
-			board_data3 = (TextView)v.findViewById(R.id.textView4);
+			board_data2 = (TextView)v.findViewById(R.id.textView2);
+			board_data3 = (TextView)v.findViewById(R.id.textView3);
+			board_data4 = (TextView)v.findViewById(R.id.textView4);
 
 		}
 	}

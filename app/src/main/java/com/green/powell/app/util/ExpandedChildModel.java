@@ -1,5 +1,8 @@
 package com.green.powell.app.util;
 
+import android.text.Editable;
+import android.text.TextWatcher;
+
 /**
  * Created by GS on 2017-02-01.
  */
@@ -8,17 +11,30 @@ public class ExpandedChildModel {
     String chk_state = "";
     int iconImg = -1; // menu icon resource id
 
+
+    public TextWatcher mTextWatcher;
+
     public ExpandedChildModel() {
 
-    }
+        //EditText 변경 리스너 생성
+        mTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-    public ExpandedChildModel(String etc) {
-        this.etc = etc;
-    }
+            }
 
-    public ExpandedChildModel(String etc, String chk_state) {
-        this.etc = etc;
-        this.chk_state = chk_state;
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //변경된 값을 저장한다
+                etc = s.toString();
+                UtilClass.logD("Ex", "onTextChanged="+s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
     }
 
     public String getEtc() {

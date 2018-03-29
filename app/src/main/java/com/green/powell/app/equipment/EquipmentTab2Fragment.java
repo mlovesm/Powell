@@ -1,124 +1,87 @@
 package com.green.powell.app.equipment;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.JavascriptInterface;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.widget.DatePicker;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.green.powell.app.R;
-import com.green.powell.app.fragment.FragMenuActivity;
+import com.green.powell.app.adaptor.CheckAdapter;
+import com.green.powell.app.adaptor.EquipmentAdapter;
+import com.green.powell.app.check.CheckFragment;
+import com.green.powell.app.retrofit.Datas;
+import com.green.powell.app.retrofit.DatasB;
+import com.green.powell.app.retrofit.RetrofitService;
 import com.green.powell.app.util.UtilClass;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class EquipmentTab2Fragment extends Fragment {
+    private final String TAG = this.getClass().getSimpleName();
+    private ProgressDialog pDlalog = null;
 
-    private static final String TAG = "EquipmentTab2Fragment";
-    private String idx;
-    private String selectGearKey;
+    private String idx="";
 
-    @Bind(R.id.webView1)
-    WebView webView;
-    private ProgressDialog dialog;
+    private Animation slideUp;
+    private Animation slideDown;
+    private boolean isDown = true;
+    private boolean isSdate=false;
+
+    @Bind(R.id.linearTop) LinearLayout layout;
+    @Bind(R.id.imageView1) ImageView exButton;
+    @Bind(R.id.textView1) TextView tv_data1;
+    @Bind(R.id.textView2) TextView tv_data2;
+    @Bind(R.id.textView3) TextView tv_data3;
+    @Bind(R.id.textView4) TextView tv_data4;
+    @Bind(R.id.textButton1) TextView tv_button1;
+    @Bind(R.id.textButton2) TextView tv_button2;
+    @Bind(R.id.recyclerView1) RecyclerView mRecyclerView;
+
+    private ArrayList<HashMap<String,String>> arrayList;
+    private EquipmentAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.basic_view, container, false);
+        View view = inflater.inflate(R.layout.equip_tabview02, container, false);
         ButterKnife.bind(this, view);
-        dialog = new ProgressDialog(getActivity());
+        UtilClass.logD(TAG, "탭 스타트2");
 
-//        url= getArguments().getString("url");
-//        selectGearKey= getArguments().getString("selectGearKey");
-        selectGearKey= "NCD20416";
+        tv_button1.setText(UtilClass.getCurrentDate(2));
+        tv_button2.setText(UtilClass.getCurrentDate(1));
 
-        final Context myApp = getActivity();
-        //자바스크립트 Alert,confirm 사용
-        webView.setWebChromeClient(new WebChromeClient() {
-            ProgressBar pb = (ProgressBar)view.findViewById(R.id.progressBar1);
+        setRecyclerView();
 
-            @Override
-            public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
-                new android.app.AlertDialog.Builder(myApp)
-                        .setTitle("경고")
-                        .setMessage(message)
-                        .setPositiveButton(android.R.string.ok,
-                                new android.app.AlertDialog.OnClickListener() {
+        slideUp = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
+        slideUp.setAnimationListener(animationListener);
+        slideDown = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_down);
+        slideDown.setAnimationListener(animationListener);
 
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        result.confirm();
-                                    }
-                                })
-                        .setCancelable(false)
-                        .create()
-                        .show();
-                return true;
-            }
-            @Override
-            public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
-                // TODO Auto-generated method stub
-                //return super.onJsConfirm(view, url, message, result);
-                new android.app.AlertDialog.Builder(view.getContext())
-                        .setTitle("알림")
-                        .setMessage(message)
-                        .setPositiveButton("네",
-                                new android.app.AlertDialog.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        result.confirm();
-                                    }
-                                })
-                        .setNegativeButton("아니오",
-                                new android.app.AlertDialog.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        result.cancel();
-                                    }
-                                })
-                        .setCancelable(false)
-                        .create()
-                        .show();
-                return true;
-            }
-
-            public void onProgressChanged(WebView webView, int paramInt) {
-                this.pb.setProgress(paramInt);
-                if (paramInt == 100)
-                {
-                    this.pb.setVisibility(View.GONE);
-                    return;
-                }
-                this.pb.setVisibility(View.VISIBLE);
-            }
-        });//setWebChromeClient 재정의
-
-        WebSettings wSetting = webView.getSettings();
-        webView.setWebViewClient(new WebViewClient()); // 이걸 안해주면 새창이 뜸
-        webView.setWebViewClient(new MyWebViewClient());
-        wSetting.setJavaScriptEnabled(true);      // 웹뷰에서 자바 스크립트 사용
-        webView.setVerticalScrollBarEnabled(false);
-        webView.setHorizontalScrollBarEnabled(false);
-
-        webView.addJavascriptInterface(new AndroidBridge(), "android");
-        webView.loadUrl("http://119.202.61.144:8585/sjsf_taewoon/Gear/gear_check_history.do?gear_cd=NCD20416");
+        getInfoHistory();
 
         return view;
-    }
+    }//onCreateView
 
     public EquipmentTab2Fragment() {
     }
@@ -127,105 +90,174 @@ public class EquipmentTab2Fragment extends Fragment {
         this.idx= idx;
     }
 
-    private class AndroidBridge {
-        @JavascriptInterface
-        public void beforeSend(){
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    UtilClass.showProgressDialog(dialog);
-                }
-            });
-        }
-        @JavascriptInterface
-        public void saveAfterResult(){
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    UtilClass.closeProgressDialog(dialog);
-                    Toast.makeText(getActivity(), "저장 되었습니다.", Toast.LENGTH_SHORT).show();
+    public void startAnimation() {
+        isDown = !isDown;
 
-                    Intent intent = new Intent(getActivity(),FragMenuActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("title", "장비점검");
-                    intent.putExtra("selectGearKey", selectGearKey);
-                    startActivity(intent);
-                }
-            });
+        if (isDown) {
+            layout.startAnimation(slideDown);
+            exButton.setImageResource(R.drawable.circle_minus);
+        } else {
+            layout.startAnimation(slideUp);
+            exButton.setImageResource(R.drawable.circle_plus);
         }
     }
 
-    private class MyWebViewClient extends WebViewClient {
+    Animation.AnimationListener animationListener = new Animation.AnimationListener() {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url){
-//            Log.d("shouldOveride","웹뷰클릭 됨="+url);
-            view.loadUrl(url);
-
-            return true;
+        public void onAnimationStart(Animation animation) {
+            layout.setVisibility(View.VISIBLE);
         }
 
         @Override
-        public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted(view, url, favicon);
-
-            UtilClass.showProgressDialog(dialog);
-        }
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            try {
-                UtilClass.closeProgressDialog(dialog);
-            } catch (Exception e) {
-                // TODO: handle exception
+        public void onAnimationEnd(Animation animation) {
+            if (!isDown) {
+                layout.setVisibility(View.GONE);
             }
-
         }
 
         @Override
-        public void onReceivedError(WebView view, int errorCode,String description, String failingUrl) {
-            super.onReceivedError(view, errorCode, description, failingUrl);
-            Log.d("onReceivedError", "errorCode=" + errorCode);
-            switch(errorCode) {
-                case ERROR_AUTHENTICATION:              // 서버에서 사용자 인증 실패
-                case ERROR_BAD_URL:                     // 잘못된 URL
-                case ERROR_CONNECT:                     // 서버로 연결 실패
-                case ERROR_FAILED_SSL_HANDSHAKE:     	// SSL handshake 수행 실패
-                case ERROR_FILE:                        // 일반 파일 오류
-                case ERROR_FILE_NOT_FOUND:              // 파일을 찾을 수 없습니다
-                case ERROR_HOST_LOOKUP:            		// 서버 또는 프록시 호스트 이름 조회 실패
-                case ERROR_IO:                          // 서버에서 읽거나 서버로 쓰기 실패
-                case ERROR_PROXY_AUTHENTICATION:    	// 프록시에서 사용자 인증 실패
-                case ERROR_REDIRECT_LOOP:               // 너무 많은 리디렉션
-                case ERROR_TIMEOUT:                     // 연결 시간 초과
-                case ERROR_TOO_MANY_REQUESTS:           // 페이지 로드중 너무 많은 요청 발생
-                case ERROR_UNKNOWN:                     // 일반 오류
-                case ERROR_UNSUPPORTED_AUTH_SCHEME:  	// 지원되지 않는 인증 체계
-                case ERROR_UNSUPPORTED_SCHEME:			// URI가 지원되지 않는 방식
+        public void onAnimationRepeat(Animation animation) {
 
-                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(view.getContext());
-                    builder.setTitle("Error");
-                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-//                            Fragment fm = getFragmentManager().findFragmentByTag("dfdf");
-                            getActivity().finish();
+        }
+    };
+
+    @OnClick(R.id.imageView1)
+    public void expandableView() {
+        startAnimation();
+    }
+
+    private void setRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+//        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+//        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        mRecyclerView.setHasFixedSize(false);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+    }
+
+    private void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        int resId = R.anim.layout_animation_from_right;
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, resId);
+
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
+    }
+
+    public void getInfoHistory(){
+        pDlalog = new ProgressDialog(getActivity());
+        UtilClass.showProcessingDialog(pDlalog);
+
+        RetrofitService service = RetrofitService.rest_api.create(RetrofitService.class);
+
+        Call<DatasB> call = service.listDataB("Equipment","equipmentInfoHistory", idx, tv_button1.getText().toString(), tv_button2.getText().toString());
+        call.enqueue(new Callback<DatasB>() {
+            @Override
+            public void onResponse(Call<DatasB> call, Response<DatasB> response) {
+                UtilClass.logD(TAG, "response="+response);
+                if (response.isSuccessful()) {
+                    UtilClass.logD(TAG, "isSuccessful="+response.body().toString());
+                    String status= response.body().getStatus();
+
+                    try {
+                        tv_data1.setText(response.body().getDatasA().get(0).get("EQUIP_NO"));
+                        tv_data2.setText(response.body().getDatasA().get(0).get("EQUIP_NM"));
+                        if(response.body().getCountB()>0){
+                            tv_data3.setText(response.body().getDatasA().get(0).get("MAKER1_DT"));
+                            tv_data4.setText(response.body().getDatasA().get(0).get("SPEC"));
+
+                        }else{
+                            tv_data4.setText("");
+//                            Toast.makeText(getActivity(), "이력정보가 없습니다.", Toast.LENGTH_SHORT).show();
                         }
-                    });
-                    builder.setMessage("네트워크 상태가 원활하지 않습니다. 잠시 후 다시 시도해 주세요.");
-                    builder.show();
 
-                    break;
+                        arrayList = new ArrayList<>();
+                        arrayList.clear();
+                        for(int i=0; i<response.body().getDatasB().size();i++){
+                            HashMap<String,String> hashMap = new HashMap<>();
+                            hashMap.put("key",response.body().getDatasB().get(i).get("CHECK_DATE"));
+                            hashMap.put("data1",response.body().getDatasB().get(i).get("CHECK_DATE"));
+                            hashMap.put("data2",response.body().getDatasB().get(i).get("CHECK_NM"));
+                            hashMap.put("data3",response.body().getDatasB().get(i).get("UserName"));
+                            hashMap.put("data4",response.body().getDatasB().get(i).get("D_ETC"));
+                            arrayList.add(hashMap);
+                        }
+                        mAdapter = new EquipmentAdapter(getActivity(),R.layout.equipment_his_item, arrayList, "EquipmentTap");
+                        mRecyclerView.setAdapter(mAdapter);
+
+                        runLayoutAnimation(mRecyclerView);
+
+
+                    } catch ( Exception e ) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity(), "에러코드 EquipmentTab 2", Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(getActivity(), "response isFailed", Toast.LENGTH_SHORT).show();
+                }
+                if(pDlalog!=null) pDlalog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<DatasB> call, Throwable t) {
+                if(pDlalog!=null) pDlalog.dismiss();
+                UtilClass.logD(TAG, "onFailure="+call.toString()+", "+t);
+                Toast.makeText(getActivity(), "onFailure Equipment",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    //날짜설정
+    @OnClick(R.id.textButton1)
+    public void getDateDialog() {
+        getDialog("SD");
+        isSdate=true;
+    }
+
+    @OnClick(R.id.textButton2)
+    public void getDateDialog2() {
+        getDialog("ED");
+        isSdate=false;
+    }
+
+    public void getDialog(String gubun) {
+        if(gubun.equals("SD")){
+            TextView textView= tv_button1;
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, UtilClass.dateAndTimeChoiceList(textView, "D").get(0)
+                    , UtilClass.dateAndTimeChoiceList(textView, "D").get(1)-1, UtilClass.dateAndTimeChoiceList(textView, "D").get(2));
+            dialog.show();
+        }else{
+            TextView textView= tv_button2;
+            DatePickerDialog dialog = new DatePickerDialog(getActivity(), date_listener, UtilClass.dateAndTimeChoiceList(textView, "D").get(0)
+                    , UtilClass.dateAndTimeChoiceList(textView, "D").get(1)-1, UtilClass.dateAndTimeChoiceList(textView, "D").get(2));
+            dialog.show();
+        }
+
+    }
+
+    private DatePickerDialog.OnDateSetListener date_listener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            String month= UtilClass.addZero(monthOfYear+1);
+            String day= UtilClass.addZero(dayOfMonth);
+            String date= year+"."+month+"."+day;
+
+            if(isSdate){
+                tv_button1.setText(date);
+            }else{
+                tv_button2.setText(date);
             }
         }
-    }//MyWebViewClient
+    };
 
-    public void onFragment(Fragment fragment, Bundle bundle){
-        FragmentManager fm = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentReplace, fragment);
-        fragmentTransaction.addToBackStack(null);
+    //해당 검색값 데이터 조회
+    @OnClick(R.id.imageView2)
+    public void onSearchColumn() {
+        getInfoHistory();
 
-        fragment.setArguments(bundle);
-        fragmentTransaction.commit();
     }
 
 }

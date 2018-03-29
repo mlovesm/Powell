@@ -327,7 +327,7 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
                         }else{
                             if(status.equals("groupY")){    //그룹 태그
                                 eGroup_no= response.body().getList().get(0).get("EGROUP_NO").toString();
-                                equip_no="";
+                                equip_no="0";
                             }else{
                                 eGroup_no= response.body().getList().get(0).get("EGROUP_NO").toString();
                                 equip_no= response.body().getList().get(0).get("EQUIP_NO").toString();
@@ -346,7 +346,7 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
                                 finish();
 
                             }else{  //설비정보
-                                if(equip_no==""){   //그룹태그
+                                if(equip_no=="0"){   //그룹태그
                                     title= pendingIntent;
                                 }else{
                                     title= pendingIntent+"상세";

@@ -65,6 +65,13 @@
         android:paddingRight="10dp"
         android:background="@drawable/border_bottom_item"
         >
+        <View
+            android:id="@+id/viewDummy"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
+
         <EditText
             android:id="@id/editText1"
             android:layout_width="match_parent"

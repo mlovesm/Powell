@@ -103,9 +103,8 @@ public class CheckWriteFragment extends Fragment {
     private ExpandedMenuModel item;
     private ExpandedChildModel childItem;
 
-    //클릭위치저장
-    int groupClickPos=0;
-    static int childClickPos=0;
+    //AniAdapter
+    public static EditText editText;
 
     private RetrofitService service;
 
@@ -144,8 +143,6 @@ public class CheckWriteFragment extends Fragment {
 
                 if(groupYN.equals("groupY")){
                     isCheckD= true;
-                    spn_equip.setVisibility(View.GONE);
-
                 }
                 selectedPostionKey= getArguments().getString("eGroup_no");
                 selectedPostionKey2= getArguments().getString("equip_no");
@@ -180,7 +177,7 @@ public class CheckWriteFragment extends Fragment {
                 UtilClass.logD("LOG", "KEY : " + adapter.getEntryValue(position));
                 UtilClass.logD("LOG", "VALUE : " + adapter.getEntry(position));
 
-                if(groupYN.equals("groupN")) getEquipData();
+                getEquipData();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -207,6 +204,8 @@ public class CheckWriteFragment extends Fragment {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
                 Log.d("DEBUG", "heading clicked="+groupPosition+","+l);
+
+                if(CheckWriteFragment.editText!=null) CheckWriteFragment.editText.clearFocus();
 
                 // 선택 한 groupPosition 의 펼침/닫힘 상태 체크
 //                Boolean isExpand = (!expandableList.isGroupExpanded(groupPosition));
@@ -412,12 +411,15 @@ public class CheckWriteFragment extends Fragment {
                         if(response.body().getCount()==0){
                             Toast.makeText(getActivity(), "데이터가 없습니다.", Toast.LENGTH_SHORT).show();
                         }
-                        equipKeyList = new String[response.body().getList().size()];
-                        equipValueList = new String[response.body().getList().size()];
+                        equipKeyList = new String[response.body().getList().size()+1];
+                        equipValueList = new String[response.body().getList().size()+1];
+
+                        equipKeyList[0]= "0";
+                        equipValueList[0]= "전체";
                         for(int i=0; i<response.body().getList().size();i++){
-                            equipKeyList[i]= response.body().getList().get(i).get("EQUIP_NO").toString();
-                            if(equipKeyList[i].equals(selectedPostionKey2))  selectedPostion2= i;
-                            equipValueList[i]= response.body().getList().get(i).get("EQUIP_NM").toString();
+                            equipKeyList[i+1]= response.body().getList().get(i).get("EQUIP_NO");
+                            if(equipKeyList[i+1].equals(selectedPostionKey2))  selectedPostion2= i+1;
+                            equipValueList[i+1]= response.body().getList().get(i).get("EQUIP_NM");
                         }
 
                         KeyValueArrayAdapter adapter = new KeyValueArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item);
@@ -463,10 +465,16 @@ public class CheckWriteFragment extends Fragment {
                     try {
                         listDataHeader = new ArrayList<ExpandedMenuModel>();
                         if(response.body().getCount()==0){
-                            Toast.makeText(getActivity(), "점검 항목이 없습니다.", Toast.LENGTH_SHORT).show();
-                            isCheckD= false;
+                            if(!selectEquipKey.equals("0")){
+                                Toast.makeText(getActivity(), "점검 항목이 없습니다.", Toast.LENGTH_SHORT).show();
+                                isCheckD= false;
+                            }else{  //전체
+                                isCheckD= true;
+                                groupYN = "groupY";
+                            }
                         }else{
                             isCheckD= true;
+                            groupYN = "groupN";
                         }
                         for(int i=0; i<response.body().getList().size();i++){
                             UtilClass.responseDataNullCheck(response.body().getList(), i);
@@ -623,6 +631,7 @@ public class CheckWriteFragment extends Fragment {
         alertDlg.setPositiveButton("예", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                if(CheckWriteFragment.editText!=null) CheckWriteFragment.editText.clearFocus();
                 if(gubun.equals("S")){
                     postData(listDataHeader);
                 }else if(gubun.equals("D")){
@@ -697,7 +706,7 @@ public class CheckWriteFragment extends Fragment {
 
         for(int i=0; i<mListDataHeader.size();i++){
             UtilClass.logD(TAG, "list="+ mListDataHeader.get(i).getTitle()+", STATE="+mListDataHeader.get(i).getState());
-            UtilClass.logD(TAG, "list="+ mListDataHeader.get(i).childDatas);
+            UtilClass.logD(TAG, "list="+ mListDataHeader.get(i).childDatas.getEtc());
         }
 
         pDlalog = new ProgressDialog(getActivity());
@@ -751,7 +760,7 @@ public class CheckWriteFragment extends Fragment {
         map.put("chk_stime",chk_stime);
         map.put("chk_etime",chk_etime);
         map.put("eGroup_no",eGroup_no);
-        map.put("pc_type","Y");
+        map.put("pc_type",pcType);
         map.put("groupYN",groupYN);
 
         pDlalog = new ProgressDialog(getActivity());
@@ -808,11 +817,10 @@ public class CheckWriteFragment extends Fragment {
 
     public static class MyWatcher implements TextWatcher {
 
-        private EditText editText;
         private int postion;
 
         public MyWatcher(EditText edit,int postion) {
-            this.editText = edit;
+            CheckWriteFragment.editText= edit;
             this.postion = postion;
         }
 
@@ -822,11 +830,12 @@ public class CheckWriteFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-//            Log.d("TAG", "onTextChanged: " + s+",Postion="+childClickPos);
+//            Log.d("TAG", "onTextChanged: " + CheckWriteFragment.editText.getText()+",Postion="+postion);
         }
 
         @Override
         public void afterTextChanged(Editable s) {
+
         }
     }
 
