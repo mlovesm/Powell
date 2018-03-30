@@ -312,7 +312,7 @@ public class FragMenuActivity extends AppCompatActivity implements NavigationVie
 
         final ProgressDialog pDlalog = new ProgressDialog(this);
         UtilClass.showProcessingDialog(pDlalog);
-        Call<Datas> call = service.listData("Check","tagDataInfo", tagValue);
+        Call<Datas> call = service.listDataQuery("Check","tagDataInfo", tagValue, pcType);
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {

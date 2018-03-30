@@ -350,7 +350,7 @@ public class CheckWriteFragment extends Fragment {
     }
 
     public void getEquipGroupData() {
-        Call<Datas> call = service.listData("Equipment","equipGroupList");
+        Call<Datas> call = service.listDataQuery("Equipment","equipGroupList", pcType);
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -398,7 +398,7 @@ public class CheckWriteFragment extends Fragment {
     }
 
     public void getEquipData() {
-        Call<Datas> call = service.listData("Equipment","equipmentList", selectEquipGroupKey);
+        Call<Datas> call = service.listDataQuery("Equipment","equipmentList", selectEquipGroupKey, pcType);
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -410,6 +410,7 @@ public class CheckWriteFragment extends Fragment {
                     try {
                         if(response.body().getCount()==0){
                             Toast.makeText(getActivity(), "데이터가 없습니다.", Toast.LENGTH_SHORT).show();
+                            isCheckD= false;
                         }
                         equipKeyList = new String[response.body().getList().size()+1];
                         equipValueList = new String[response.body().getList().size()+1];

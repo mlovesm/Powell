@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
 //    adb shell dumpsys activity activities | findstr "Run"
     private final String TAG = this.getClass().getSimpleName();
-    public static String ipAddress= "http://220.81.187.59:8585";
-//    public static String ipAddress= "http://192.168.0.22:9191";
+//    public static String ipAddress= "http://220.81.187.59:8585";
+    public static String ipAddress= "http://192.168.0.22:9191";
     public static String contextPath= "/powell";
     private ProgressDialog pDlalog = null;
     private RetrofitService service;
