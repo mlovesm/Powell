@@ -11,4 +11,7 @@
 # Retain declared checked exceptions for use by a Proxy instance.
 -keepattributes Exceptions
 
+#
+-keep class com.green.powell.app.retrofit** { *; }
+
 # End: Proguard rules for retrofit2
