@@ -59,6 +59,10 @@ public interface RetrofitService {
     Call<Datas> listData(@Path("title") String title, @Path("sub") String sub, @Path(value = "path", encoded = true) String path,
                          @Path(value = "path2", encoded = true) String path2, @Path(value = "path3", encoded = true) String path3);
 
+    @GET("{title}/{sub}/{path}/{path2}/{path3}/{path4}")
+    Call<Datas> listData(@Path("title") String title, @Path("sub") String sub, @Path(value = "path", encoded = true) String path,
+                         @Path(value = "path2", encoded = true) String path2, @Path(value = "path3", encoded = true) String path3, @Path("path4") String path4);
+
     @FormUrlEncoded
     @POST("{title}/{sub}Insert")
     Call<Datas> insertData(@Path("title") String title, @Path("sub") String sub, @FieldMap Map<String, Object> fields);

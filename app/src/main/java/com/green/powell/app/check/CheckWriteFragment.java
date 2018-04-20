@@ -398,7 +398,7 @@ public class CheckWriteFragment extends Fragment {
     }
 
     public void getEquipData() {
-        Call<Datas> call = service.listDataQuery("Equipment","equipmentList", selectEquipGroupKey, pcType);
+        Call<Datas> call = service.listDataQuery("Equipment","equipmentCheckList", selectEquipGroupKey, pcType);
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
@@ -412,15 +412,15 @@ public class CheckWriteFragment extends Fragment {
                             Toast.makeText(getActivity(), "데이터가 없습니다.", Toast.LENGTH_SHORT).show();
                             isCheckD= false;
                         }
-                        equipKeyList = new String[response.body().getList().size()+1];
-                        equipValueList = new String[response.body().getList().size()+1];
+                        equipKeyList = new String[response.body().getList().size()];
+                        equipValueList = new String[response.body().getList().size()];
 
-                        equipKeyList[0]= "0";
-                        equipValueList[0]= "전체";
+//                        equipKeyList[0]= "0";
+//                        equipValueList[0]= "전체";
                         for(int i=0; i<response.body().getList().size();i++){
-                            equipKeyList[i+1]= response.body().getList().get(i).get("EQUIP_NO");
-                            if(equipKeyList[i+1].equals(selectedPostionKey2))  selectedPostion2= i+1;
-                            equipValueList[i+1]= response.body().getList().get(i).get("EQUIP_NM");
+                            equipKeyList[i]= response.body().getList().get(i).get("EQUIP_NO");
+                            if(equipKeyList[i].equals(selectedPostionKey2))  selectedPostion2= i;
+                            equipValueList[i]= response.body().getList().get(i).get("EQUIP_NM");
                         }
 
                         KeyValueArrayAdapter adapter = new KeyValueArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item);
@@ -455,7 +455,7 @@ public class CheckWriteFragment extends Fragment {
         pDlalog = new ProgressDialog(getActivity());
         UtilClass.showProcessingDialog(pDlalog);
 
-        Call<Datas> call = service.listData("Check","checkDInfoList", "checkInfo="+ selectEquipKey, key_check_date, chk_no);
+        Call<Datas> call = service.listData("Check","checkDInfoList", "checkInfo="+ selectEquipKey, key_check_date, chk_no, pcType);
         call.enqueue(new Callback<Datas>() {
             @Override
             public void onResponse(Call<Datas> call, Response<Datas> response) {
